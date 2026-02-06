@@ -100,3 +100,11 @@ h1 {
 #sendBtn:active {
   transform: scale(0.98);
 }
+
+.join {
+  padding: 10px 15px;
+  background: #b8b8b8;
+  border-radius: 20px;
+  word-wrap: break-word;
+  animation: slideIn 0.3s ease;
+}

@@ -10,6 +10,11 @@ const sendBtn = document.getElementById("sendBtn");
 // Conectar al servidor
 socket.on("connect", () => {
   console.log("Conectado al servidor");
+  const messageEl = document.createElement("div");
+  messageEl.className = "join";
+  messageEl.textContent = "Un usuario se ha unido";
+  messagesDiv.appendChild(messageEl);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
 
 // Al recibir mensajes del servidor
@@ -28,7 +33,7 @@ sendBtn.addEventListener("click", () => {
   if (message) {
     socket.emit("message", message); //Transmite el mensaje a todos los usuarios conectados
     messageInput.value = "";
-    messageInput.focus();   //selecciona el input
+    messageInput.focus(); //selecciona el input
   }
 });
 

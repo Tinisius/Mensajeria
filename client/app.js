@@ -2,6 +2,38 @@ import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
 
 const socket = io(); // Se conecta al servidor automáticamente
 
+//-------------------------------------------------- Interfaz de login ------------------------------------------------------------
+
+let USER;
+
+function login(username) {
+  // Ocultar formulario de login
+  document.getElementById("loginContainer").style.display = "none";
+  // Mostrar interfaz de chat
+  document.getElementById("chatContainer").style.display = "flex"; // o "block"
+  // Mensaje de bienvenida
+
+  const JoinMsg = document.createElement("div");
+  JoinMsg.className = "join";
+  JoinMsg.textContent = `${username} se ha unido`;
+  messagesDiv.appendChild(JoinMsg);
+  //messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+const loginBtn = document.getElementById("loginBtn");
+const loginInput = document.getElementById("loginInput");
+loginBtn.addEventListener("click", () => {
+  const username = loginInput.value.trim(); //obtenemos el valor del input (mensaje)
+  if (username && username.length < 20) {
+    USER = username; //guarda el nombre de forma global
+    login(username);
+  } else {
+    alert("el nombre debe tener entre 1 y 20 caracteres!");
+  }
+});
+
+//-------------------------------------------------- Luego del login ------------------------------------------------------------
+
 //creamos instancias de los elementos HTML
 const messagesDiv = document.getElementById("messages");
 const messageInput = document.getElementById("messageInput");
@@ -10,11 +42,6 @@ const sendBtn = document.getElementById("sendBtn");
 // Conectar al servidor
 socket.on("connect", () => {
   console.log("Conectado al servidor");
-  const messageEl = document.createElement("div");
-  messageEl.className = "join";
-  messageEl.textContent = "Un usuario se ha unido";
-  messagesDiv.appendChild(messageEl);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
 
 // Al recibir mensajes del servidor
@@ -31,7 +58,7 @@ socket.on("message", (msg) => {
 sendBtn.addEventListener("click", () => {
   const message = messageInput.value.trim(); //obtenemos el valor del input (mensaje)
   if (message) {
-    socket.emit("message", message); //Transmite el mensaje a todos los usuarios conectados
+    socket.emit("message", USER + ": " + message); //Transmite el mensaje a todos los usuarios conectados
     messageInput.value = "";
     messageInput.focus(); //selecciona el input
   }

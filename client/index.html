@@ -7,11 +7,21 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="container">
+    <div id="loginContainer">
+      <h2 id="loginTitle">!Bienvenido!</h1>
+      <input type="text" id="loginInput" placeholder="Escribe tu nombre" />
+      <button id="loginBtn">Ingresar</button>
+    </div>
+
+    <div class="container" id="chatContainer" style="display: none">
       <h1>Chat en Vivo</h1>
       <div id="messages" class="messages"></div>
       <div class="input-group">
-        <input type="text" id="messageInput" placeholder="Escribe un mensaje..." />
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Escribe un mensaje..."
+        />
         <button id="sendBtn">Enviar</button>
       </div>
     </div>

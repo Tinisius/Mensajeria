@@ -13,11 +13,7 @@ function login(username) {
   document.getElementById("chatContainer").style.display = "flex"; // o "block"
   // Mensaje de bienvenida
 
-  const JoinMsg = document.createElement("div");
-  JoinMsg.className = "join";
-  JoinMsg.textContent = `${username} se ha unido`;
-  messagesDiv.appendChild(JoinMsg);
-  //messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  socket.emit("join", username); //avisa a los usuarios que alguien se unió
 }
 
 const loginBtn = document.getElementById("loginBtn");
@@ -42,6 +38,14 @@ const sendBtn = document.getElementById("sendBtn");
 // Conectar al servidor
 socket.on("connect", () => {
   console.log("Conectado al servidor");
+});
+
+socket.on("join", (username) => {
+  const JoinMsg = document.createElement("div");
+  JoinMsg.className = "join";
+  JoinMsg.textContent = `${username} se ha unido`;
+  messagesDiv.appendChild(JoinMsg);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
 
 // Al recibir mensajes del servidor

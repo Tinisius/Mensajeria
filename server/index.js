@@ -18,14 +18,14 @@ io.on("connection", (socket) => {
   //espera a que un cliente se conecte
   console.log("usuario conectado");
 
-  socket.on("message", (msg, color) => {
+  socket.on("message", (msg, color, font) => {
     //Escucha cuando un cliente envía un mensaje
-    io.emit("message", msg, color); //Transmite el mensaje a todos los usuarios conectados
+    io.emit("message", msg, color, font); //Transmite el mensaje a todos los usuarios conectados
   });
 
-  socket.on("join", (username, color) => {
+  socket.on("join", (username, color, font) => {
     //Escucha cuando un cliente se une
-    io.emit("join", username, color); //Transmite el mensaje a todos los usuarios conectados
+    io.emit("join", username, color, font); //Transmite el mensaje a todos los usuarios conectados
   });
 });
 

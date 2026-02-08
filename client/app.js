@@ -7,6 +7,7 @@ const socket = io(); // Se conecta al servidor automáticamente
 
 let USER;
 let USER_COLOR;
+let USER_FONT;
 
 function login(username) {
   // Ocultar formulario de login
@@ -15,7 +16,7 @@ function login(username) {
   document.getElementById("chatContainer").style.display = "flex"; // o "block"
   // Mensaje de bienvenida
 
-  socket.emit("join", username, ModBright(USER_COLOR, -30)); //avisa a los usuarios que alguien se unió
+  socket.emit("join", username, ModBright(USER_COLOR, -30), USER_FONT); //avisa a los usuarios que alguien se unió
 }
 
 const loginBtn = document.getElementById("loginBtn");
@@ -27,14 +28,11 @@ loginBtn.addEventListener("click", () => {
   const color = colorPicker.value;
 
   if (username && username.length < 20) {
-    if (HEXbright(color) >= 0) {
-      USER = username; //guarda el nombre de forma global
-      USER_COLOR = color; //guarda el color de forma global
-      login(username);
-    } else {
-      alert("el color es muy oscuro!");
-      console.log(color);
-    }
+    if (HEXbright(color) < 128) USER_FONT = "#ececec";
+    else USER_FONT = "#3b3b3b";
+    USER = username; //guarda el nombre de forma global
+    USER_COLOR = color; //guarda el color de forma global
+    login(username);
   } else alert("el nombre debe tener entre 1 y 20 caracteres!");
 });
 
@@ -50,22 +48,24 @@ socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
 
-socket.on("join", (username, color) => {
+socket.on("join", (username, color, font) => {
   const JoinMsg = document.createElement("div");
   JoinMsg.className = "join";
   JoinMsg.textContent = `${username} se ha unido`;
   JoinMsg.style.backgroundColor = color;
+  JoinMsg.style.color = font;
   messagesDiv.appendChild(JoinMsg);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
 
 // Al recibir mensajes del servidor
-socket.on("message", (msg, color) => {
+socket.on("message", (msg, color, font) => {
   //crea el elemento del mensaje
   const messageEl = document.createElement("div");
   messageEl.className = "message";
   messageEl.textContent = msg;
   messageEl.style.backgroundColor = color;
+  messageEl.style.color = font;
 
   messagesDiv.appendChild(messageEl);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -75,7 +75,7 @@ socket.on("message", (msg, color) => {
 sendBtn.addEventListener("click", () => {
   const message = messageInput.value.trim(); //obtenemos el valor del input (mensaje)
   if (message) {
-    socket.emit("message", USER + ": " + message, USER_COLOR); //Transmite el mensaje a todos los usuarios conectados
+    socket.emit("message", USER + ": " + message, USER_COLOR, USER_FONT); //Transmite el mensaje a todos los usuarios conectados
     messageInput.value = "";
     messageInput.focus(); //selecciona el input
   }

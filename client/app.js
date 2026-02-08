@@ -27,7 +27,7 @@ loginBtn.addEventListener("click", () => {
   const color = colorPicker.value;
 
   if (username && username.length < 20) {
-    if (HEXbright(color) >= 128) {
+    if (HEXbright(color) >= 0) {
       USER = username; //guarda el nombre de forma global
       USER_COLOR = color; //guarda el color de forma global
       login(username);

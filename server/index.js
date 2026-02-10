@@ -3,29 +3,40 @@ import http from "http";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { getRecentMessages, saveMessage } from "./store/messages.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = 8000;
+const PORT = Number(process.env.PORT || 8000);
 const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.static(join(__dirname, "../client")));
 
-io.on("connection", (socket) => {
-  //espera a que un cliente se conecte
+io.on("connection", async (socket) => {
   console.log("usuario conectado");
 
-  socket.on("message", (msg, color, font) => {
-    //Escucha cuando un cliente envía un mensaje
-    io.emit("message", msg, color, font); //Transmite el mensaje a todos los usuarios conectados
+  try {
+    const history = await getRecentMessages(50);
+    socket.emit("history", history);
+  } catch (error) {
+    console.error("[history] Error cargando mensajes:", error);
+  }
+
+  socket.on("message", async (msg, color, font) => {
+    io.emit("message", msg, color, font);
+
+    try {
+      await saveMessage({ text: msg, color, font });
+    } catch (error) {
+      console.error("[mongo] Error guardando mensaje:", error);
+    }
   });
 
   socket.on("join", (username, color, font) => {
-    //Escucha cuando un cliente se une
-    io.emit("join", username, color, font); //Transmite el mensaje a todos los usuarios conectados
+    io.emit("join", username, color, font);
   });
 });
 

@@ -1,61 +1,40 @@
-const dataApiUrl = process.env.MONGODB_DATA_API_URL;
-const apiKey = process.env.MONGODB_DATA_API_KEY;
-const dataSource = process.env.MONGODB_DATA_SOURCE || "Cluster0";
+import { MongoClient } from "mongodb";
+
+const uri = process.env.MONGODB_URI;
 const database = process.env.MONGODB_DB_NAME || "mensajeria";
-const collection = process.env.MONGODB_COLLECTION || "messages";
+const collectionName = process.env.MONGODB_COLLECTION || "messages";
 
 let warned = false;
+let client;
+let collection;
 
-function canUseDataApi() {
-  return Boolean(dataApiUrl && apiKey);
-}
-
-function headers() {
-  return {
-    "Content-Type": "application/json",
-    "api-key": apiKey,
-  };
-}
-
-async function request(action, body) {
-  const response = await fetch(`${dataApiUrl}/${action}`, {
-    method: "POST",
-    headers: headers(),
-    body: JSON.stringify({ dataSource, database, collection, ...body }),
-  });
-
-  if (!response.ok) {
-    const detail = await response.text();
-    throw new Error(`Mongo Data API (${action}) ${response.status}: ${detail}`);
-  }
-
-  return response.json();
-}
-
-export async function insertMessage(document) {
-  if (!canUseDataApi()) {
+export async function getMessagesCollection() {
+  if (!uri) {
     if (!warned) {
-      console.warn(
-        "[mongo] Faltan variables MONGODB_DATA_API_URL o MONGODB_DATA_API_KEY. Se usará almacenamiento en memoria."
-      );
+      console.warn("[mongo] Falta MONGODB_URI. Se usará almacenamiento en memoria.");
       warned = true;
     }
     return null;
   }
 
-  return request("insertOne", { document });
-}
-
-export async function findRecentMessages(limit = 50) {
-  if (!canUseDataApi()) {
-    return null;
+  if (collection) {
+    return collection;
   }
 
-  const result = await request("find", {
-    filter: { type: "message" },
-    sort: { createdAt: -1 },
-    limit,
-  });
+  if (!client) {
+    client = new MongoClient(uri);
+    await client.connect();
+    console.log("[mongo] Conectado a MongoDB Atlas");
+  }
 
-  return result.documents ?? [];
+  collection = client.db(database).collection(collectionName);
+  return collection;
+}
+
+export async function closeMongoConnection() {
+  if (client) {
+    await client.close();
+    client = undefined;
+    collection = undefined;
+  }
 }

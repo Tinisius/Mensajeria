@@ -1,4 +1,4 @@
-import { findRecentMessages, insertMessage } from "../db/mongo.js";
+import { getMessagesCollection } from "../db/mongo.js";
 
 const inMemoryMessages = [];
 const MAX_MESSAGES = 100;
@@ -15,27 +15,35 @@ export async function saveMessage(message) {
     text: message.text,
     color: message.color,
     font: message.font,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date(),
   };
 
-  const result = await insertMessage(normalized);
+  const collection = await getMessagesCollection();
 
-  if (!result) {
+  if (!collection) {
     inMemoryMessages.push(normalized);
     trimInMemory();
+    return normalized;
   }
 
+  await collection.insertOne(normalized);
   return normalized;
 }
 
 export async function getRecentMessages(limit = 50) {
   const safeLimit = Number.isInteger(limit) ? Math.min(Math.max(limit, 1), MAX_MESSAGES) : 50;
 
-  const docs = await findRecentMessages(safeLimit);
+  const collection = await getMessagesCollection();
 
-  if (!docs) {
+  if (!collection) {
     return inMemoryMessages.slice(-safeLimit);
   }
+
+  const docs = await collection
+    .find({ type: "message" })
+    .sort({ createdAt: -1 })
+    .limit(safeLimit)
+    .toArray();
 
   return docs.reverse();
 }

@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { getRecentMessages, saveMessage } from "./store/messages.js";
+import { closeMongoConnection } from "./db/mongo.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -42,4 +43,15 @@ io.on("connection", async (socket) => {
 
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+process.on("SIGINT", async () => {
+  await closeMongoConnection();
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  await closeMongoConnection();
+  process.exit(0);
 });

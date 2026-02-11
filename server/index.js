@@ -60,8 +60,9 @@ process.on("SIGINT", async () => {
   process.exit(0);
 });
 
-//2.0
+/*2.0
 process.on("SIGTERM", async () => {
   await closeMongoConnection();
   process.exit(0);
 });
+*/

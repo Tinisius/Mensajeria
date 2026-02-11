@@ -7,10 +7,11 @@ let USER;
 let USER_COLOR;
 let USER_FONT;
 
-function renderMessage(msg, color, font) {
+//2.0 para renderizar todos los mensajes de la base de datos (simplifica el cliente tambien)
+function renderMessage(msg, color, font, type = "message") {
   const messageEl = document.createElement("div");
-  messageEl.className = "message";
-  messageEl.textContent = msg;
+  messageEl.className = type; //message - join
+  messageEl.textContent = type === "message" ? msg : `${msg} se ha unido`;
   messageEl.style.backgroundColor = color;
   messageEl.style.color = font;
 
@@ -49,22 +50,17 @@ socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
 
+//2.0 se llama al iniciar sesion (join)
 socket.on("history", (historyMessages) => {
   messagesDiv.innerHTML = "";
-
+  //renderiza todos los mensajes de la DB
   historyMessages.forEach((item) => {
-    renderMessage(item.text, item.color, item.font);
+    renderMessage(item.text, item.color, item.font, item.type);
   });
 });
 
 socket.on("join", (username, color, font) => {
-  const JoinMsg = document.createElement("div");
-  JoinMsg.className = "join";
-  JoinMsg.textContent = `${username} se ha unido`;
-  JoinMsg.style.backgroundColor = color;
-  JoinMsg.style.color = font;
-  messagesDiv.appendChild(JoinMsg);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  renderMessage(username, color, font, "join");
 });
 
 socket.on("message", (msg, color, font) => {

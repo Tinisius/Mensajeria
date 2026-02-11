@@ -1,3 +1,4 @@
+///2.0 realiza las peticiones a la base de datos y se las devuelve messages.js, luego messages se encarga de procesarlos
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
@@ -11,7 +12,9 @@ let collection;
 export async function getMessagesCollection() {
   if (!uri) {
     if (!warned) {
-      console.warn("[mongo] Falta MONGODB_URI. Se usará almacenamiento en memoria.");
+      console.warn(
+        "[mongo] Falta MONGODB_URI. Se usará almacenamiento en memoria.",
+      );
       warned = true;
     }
     return null;
@@ -27,7 +30,7 @@ export async function getMessagesCollection() {
     console.log("[mongo] Conectado a MongoDB Atlas");
   }
 
-  collection = client.db(database).collection(collectionName);
+  collection = client.db(database).collection(collectionName); //realiza la peticion
   return collection;
 }
 

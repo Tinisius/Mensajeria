@@ -3,7 +3,6 @@ import http from "http";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-//2.0
 import { getRecentMessages, saveMessage } from "./store/messages.js";
 import { closeMongoConnection } from "./db/mongo.js";
 
@@ -42,7 +41,7 @@ io.on("connection", async (socket) => {
 
     io.emit("join", username, color, font);
 
-    //2.0 guarda el mensaje join
+    //2.1 guarda el mensaje join
     try {
       await saveMessage({ type: "join", text: username, color, font });
     } catch (error) {
@@ -53,8 +52,11 @@ io.on("connection", async (socket) => {
 
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  console.log("DB:", process.env.MONGODB_DB_NAME);
+  console.log("URI:", process.env.MONGO_URI);
 });
 
+//2.0
 process.on("SIGINT", async () => {
   await closeMongoConnection();
   process.exit(0);

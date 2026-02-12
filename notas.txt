@@ -1,0 +1,7 @@
+para probar en local cambiar en el package.json el start
+
+LOCAL:
+"start": "node --env-file=.env server/index.js",
+
+RENDER:
+"start": "node server/index.js",

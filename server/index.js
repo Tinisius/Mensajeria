@@ -53,7 +53,7 @@ io.on("connection", async (socket) => {
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log("DB:", process.env.MONGODB_DB_NAME);
-  console.log("URI:", process.env.MONGO_URI);
+  console.log("URI:", process.env.MONGODB_URI);
 });
 
 //2.0

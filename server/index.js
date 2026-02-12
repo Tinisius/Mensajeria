@@ -52,8 +52,6 @@ io.on("connection", async (socket) => {
 
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log("DB:", process.env.MONGODB_DB_NAME);
-  console.log("URI:", process.env.MONGODB_URI);
 });
 
 //2.0
@@ -62,9 +60,8 @@ process.on("SIGINT", async () => {
   process.exit(0);
 });
 
-/*2.0
+//2.0
 process.on("SIGTERM", async () => {
   await closeMongoConnection();
   process.exit(0);
 });
-*/

@@ -132,7 +132,7 @@ h1 {
   letter-spacing: 0.2px;
 }
 
-#loginInput {
+.menuInput {
   flex: 1;
   padding: 10px 14px;
   border-radius: 10px;
@@ -144,11 +144,11 @@ h1 {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-#loginInput::placeholder {
+.menuInput::placeholder {
   color: rgba(255, 255, 255, 0.75);
 }
 
-#loginContainer button#loginBtn {
+#loginContainer button.menuBtn {
   padding: 10px 16px;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.18);

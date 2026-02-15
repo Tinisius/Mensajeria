@@ -19,26 +19,57 @@ function renderMessage(msg, color, font, type = "message") {
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-function login(username) {
+function EnterChat(username) {
   document.getElementById("loginContainer").style.display = "none";
   document.getElementById("chatContainer").style.display = "flex";
   socket.emit("join", username, ModBright(USER_COLOR, -30), USER_FONT);
 }
 
-const loginBtn = document.getElementById("loginBtn");
 const loginInput = document.getElementById("loginInput");
+const passwordInput = document.getElementById("passwordInput");
+const loginBtn = document.getElementById("loginBtn");
+const signInBtn = document.getElementById("signInBtn");
 const colorPicker = document.getElementById("colorPicker");
 
+//login
 loginBtn.addEventListener("click", () => {
   const username = loginInput.value.trim();
+  const password = passwordInput.value.trim();
   const color = colorPicker.value;
 
+  //3.0 valida el nombre y la contraseña
   if (username && username.length < 20) {
-    if (HEXbright(color) < 128) USER_FONT = "#ececec";
-    else USER_FONT = "#3b3b3b";
-    USER = username;
-    USER_COLOR = color;
-    login(username);
+    socket.emit("logIn", username, password, (validation) => {
+      if (validation) {
+        if (HEXbright(color) < 128) USER_FONT = "#ececec";
+        else USER_FONT = "#3b3b3b";
+        USER = username;
+        USER_COLOR = color;
+        EnterChat(username);
+      } else alert("Usuario o contraseña incorrectos!");
+    });
+  } else alert("el nombre debe tener entre 1 y 20 caracteres!");
+});
+
+//signIn
+signInBtn.addEventListener("click", () => {
+  const username = loginInput.value.trim();
+  const password = passwordInput.value.trim();
+  const color = colorPicker.value;
+
+  //3.0 valida que el nombre no exista
+  if (username && username.length < 20) {
+    if (password && password.length < 20) {
+      socket.emit("signIn", username, password, (validation) => {
+        if (validation) {
+          if (HEXbright(color) < 128) USER_FONT = "#ececec";
+          else USER_FONT = "#3b3b3b";
+          USER = username;
+          USER_COLOR = color;
+          EnterChat(username);
+        } else alert("Usuario ya existe!");
+      });
+    } else alert("la contraseña debe tener entre 1 y 20 caracteres!");
   } else alert("el nombre debe tener entre 1 y 20 caracteres!");
 });
 

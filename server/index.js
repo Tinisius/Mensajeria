@@ -4,7 +4,11 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { getRecentMessages, saveMessage } from "./store/messages.js";
+import { saveUser } from "./store/users.js";
+import { userExists, matchPassword } from "./security/validations.js";
 import { closeMongoConnection } from "./db/mongo.js";
+import { PassThrough } from "stream";
+import { existsSync } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -18,6 +22,27 @@ app.use(express.static(join(__dirname, "../client")));
 
 io.on("connection", async (socket) => {
   console.log("usuario conectado");
+
+  //3.0
+  socket.on("logIn", async (username, password, callback) => {
+    callback(
+      (await userExists(username)) && (await matchPassword(username, password)),
+    );
+  });
+
+  //3.0
+  socket.on("signIn", async (username, password, callback) => {
+    const exists = await userExists(username);
+    if (!exists) {
+      try {
+        await saveUser(username, password);
+        callback(true);
+      } catch (error) {
+        console.error("[mongo] Error guardando usuario:", error);
+        callback(false);
+      }
+    } else callback(false);
+  });
 
   socket.on("message", async (msg, color, font) => {
     io.emit("message", msg, color, font);

@@ -100,7 +100,7 @@ socket.on("message", (msg, color, font) => {
 
 sendBtn.addEventListener("click", () => {
   const message = messageInput.value.trim();
-  if (message) {
+  if (message && USER) {
     socket.emit("message", USER + ": " + message, USER_COLOR, USER_FONT);
     messageInput.value = "";
     messageInput.focus();

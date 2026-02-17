@@ -8,7 +8,7 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
   </head>
   <body>
-    <div id="loginContainer">
+    <div id="loginContainer" style="display: none">
       <h2 id="loginTitle">!Bienvenido!</h1>
       <input type="text" id="loginInput" class="menuInput" placeholder="Escribe tu nombre" />   
       <input type="text" id="passwordInput" class="menuInput" placeholder="Contraseña" />       
@@ -17,17 +17,36 @@
       <button id="signInBtn" class="menuBtn">Crear cuenta</button>
     </div>
 
-    <div class="container" id="chatContainer" style="display: none">
-      <h1>Chat en Vivo</h1>
-      <div id="messages" class="messages"></div>
-      <div class="input-group">
-        <input
-          type="text"
-          id="messageInput"
-          placeholder="Escribe un mensaje..."
-        />
-        <button id="sendBtn">Enviar</button>
+    <div id="main" style="display: flex">
+      <div id="chatsList">
+        <h1>Lista de Chats</h1>
+        <div id="list">
+          <button class="chatBtn">GENERAL1</button>
+          <button class="chatBtn">GENERAL2</button>
+          <button class="chatBtn">GENERAL3</button>
+          <button class="chatBtn">GENERAL4</button>
+        </div>
+        <div class="input-group">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Nombre del chat..."
+          />
+          <button id="sendBtn">CREAR CHAT</button>
+        </div>
       </div>
+      <div id="chatContainer">
+        <h1>Chat en Vivo</h1>
+        <div id="messages" class="messages"></div>
+        <div class="input-group">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Escribe un mensaje..."
+          />
+          <button id="sendBtn">Enviar</button>
+        </div>
+    </div>
     </div>
   </body>
   <script type="module" src="app.js"></script>

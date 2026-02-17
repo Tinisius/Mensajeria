@@ -7,8 +7,6 @@ import { getRecentMessages, saveMessage } from "./store/messages.js";
 import { saveUser } from "./store/users.js";
 import { userExists, matchPassword } from "./security/validations.js";
 import { closeMongoConnection } from "./db/mongo.js";
-import { PassThrough } from "stream";
-import { existsSync } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,7 +19,7 @@ const io = new Server(server);
 app.use(express.static(join(__dirname, "../client")));
 
 io.on("connection", async (socket) => {
-  console.log("usuario conectado");
+  console.log(`usuario conectado con id: ${socket.id}`);
 
   //3.0
   socket.on("logIn", async (username, password, callback) => {

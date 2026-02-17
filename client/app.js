@@ -21,7 +21,7 @@ function renderMessage(msg, color, font, type = "message") {
 
 function EnterChat(username) {
   document.getElementById("loginContainer").style.display = "none";
-  document.getElementById("chatContainer").style.display = "flex";
+  document.getElementById("main").style.display = "flex";
   socket.emit("join", username, ModBright(USER_COLOR, -30), USER_FONT);
 }
 

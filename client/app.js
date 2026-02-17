@@ -1,5 +1,5 @@
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
-import { HEXbright, ModBright } from "./utils.js";
+import { HEXbright, ModBright, showAlert } from "./utils.js";
 
 const socket = io();
 
@@ -46,9 +46,9 @@ loginBtn.addEventListener("click", () => {
         USER = username;
         USER_COLOR = color;
         EnterChat(username);
-      } else alert("Usuario o contraseña incorrectos!");
+      } else showAlert("Usuario o contraseña incorrectos!");
     });
-  } else alert("el nombre debe tener entre 1 y 20 caracteres!");
+  } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
 });
 
 //signIn
@@ -62,15 +62,16 @@ signInBtn.addEventListener("click", () => {
     if (password && password.length < 20) {
       socket.emit("signIn", username, password, (validation) => {
         if (validation) {
+          showAlert("usuario creado correctamente");
           if (HEXbright(color) < 128) USER_FONT = "#ececec";
           else USER_FONT = "#3b3b3b";
           USER = username;
           USER_COLOR = color;
           EnterChat(username);
-        } else alert("Usuario ya existe!");
+        } else showAlert("Usuario ya existe!");
       });
-    } else alert("la contraseña debe tener entre 1 y 20 caracteres!");
-  } else alert("el nombre debe tener entre 1 y 20 caracteres!");
+    } else showAlert("la contraseña debe tener entre 1 y 20 caracteres!");
+  } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
 });
 
 const messagesDiv = document.getElementById("messages");

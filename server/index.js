@@ -42,8 +42,8 @@ io.on("connection", async (socket) => {
     } else callback(false);
   });
 
-  socket.on("message", async (msg, color, font) => {
-    io.emit("message", msg, color, font);
+  socket.on("message", async (room, msg, color, font) => {
+    io.emit("message", room, msg, color, font);
 
     //2.0 guarda el mensaje cada vez que se envia
     try {
@@ -53,7 +53,7 @@ io.on("connection", async (socket) => {
     }
   });
 
-  socket.on("join", async (username, color, font) => {
+  socket.on("join", async (room, username, color, font) => {
     //2.0 obtiene los mensajes y llama a history para renderizarlos
     try {
       const history = await getRecentMessages(50);

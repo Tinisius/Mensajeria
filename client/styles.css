@@ -21,7 +21,7 @@ body {
   justify-content: space-around;
 }
 
-#chatsList {
+#chatsListGroup {
   background: rgb(214, 255, 241);
   border-radius: 10px;
   width: 30vw;
@@ -31,7 +31,7 @@ body {
   flex-direction: column;
 }
 
-#list {
+#chatSelectorContainer {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
@@ -48,7 +48,7 @@ body {
   border-radius: 5px;
 }
 
-#chatContainer {
+.chatContainer {
   background: white;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);

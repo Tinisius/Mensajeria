@@ -11,9 +11,10 @@ function trimInMemory() {
 }
 
 //guarda el mensaje
-export async function saveMessage(message) {
+export async function saveMessage(message, chat) {
   //normalized seria el mensaje a guardar
   const normalized = {
+    chat: chat,
     type: message.type,
     text: message.text,
     color: message.color,
@@ -34,7 +35,7 @@ export async function saveMessage(message) {
 }
 
 //obtiene los mensajes
-export async function getRecentMessages(limit = 50) {
+export async function getRecentMessages(limit = 50, chat) {
   const safeLimit = Number.isInteger(limit)
     ? Math.min(Math.max(limit, 1), MAX_MESSAGES)
     : 50;
@@ -47,7 +48,7 @@ export async function getRecentMessages(limit = 50) {
 
   //devuelve la coleccion ordenada y truncada en forma de array (no filtra pero podria)
   const docs = await collection
-    .find({}) //sin filtro
+    .find({ chat: chat }) //sin filtro
     .sort({ createdAt: -1 })
     .limit(safeLimit)
     .toArray();

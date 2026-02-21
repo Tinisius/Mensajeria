@@ -117,7 +117,7 @@ h1 {
   border-color: #667eea;
 }
 
-#sendBtn {
+.sendBtn {
   padding: 10px 20px;
   background: #667eea;
   color: white;
@@ -128,11 +128,11 @@ h1 {
   transition: background 0.3s;
 }
 
-#sendBtn:hover {
+.sendBtn:hover {
   background: #764ba2;
 }
 
-#sendBtn:active {
+.sendBtn:active {
   transform: scale(0.98);
 }
 
@@ -196,6 +196,6 @@ h1 {
     transform 0.08s ease;
 }
 
-#loginContainer button#loginBtn:hover {
+#loginContainer button.menuBtn:hover {
   background: rgba(255, 255, 255, 0.18);
 }

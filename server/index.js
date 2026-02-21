@@ -42,31 +42,32 @@ io.on("connection", async (socket) => {
     } else callback(false);
   });
 
-  socket.on("message", async (room, msg, color, font) => {
-    io.emit("message", room, msg, color, font);
-
-    //2.0 guarda el mensaje cada vez que se envia
+  socket.on("message", async (chat, msg, color, font) => {
+    io.emit("message", chat, msg, color, font);
     try {
-      await saveMessage({ type: "message", text: msg, color, font });
+      await saveMessage({ type: "message", text: msg, color, font }, chat);
     } catch (error) {
-      console.error("[mongo] Error guardando mensaje:", error);
+      console.error(
+        `[mongo] Error guardando mensaje en el chat:${chat}:`,
+        error,
+      );
     }
   });
 
-  socket.on("join", async (room, username, color, font) => {
+  socket.on("join", async (chat, username, color, font) => {
     //2.0 obtiene los mensajes y llama a history para renderizarlos
     try {
-      const history = await getRecentMessages(50);
-      socket.emit("history", history);
+      const history = await getRecentMessages(50, chat); //obtiene los mensajes de cierto chat
+      socket.emit("history", history, chat);
     } catch (error) {
       console.error("[history] Error cargando mensajes:", error);
     }
 
-    io.emit("join", username, color, font);
+    io.emit("join", chat, username, color, font);
 
     //2.1 guarda el mensaje join
     try {
-      await saveMessage({ type: "join", text: username, color, font });
+      await saveMessage({ type: "join", text: username, color, font }, chat);
     } catch (error) {
       console.error("[mongo] Error guardando join:", error);
     }

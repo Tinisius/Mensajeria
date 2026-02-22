@@ -10,22 +10,25 @@ let USER;
 let USER_COLOR;
 let USER_FONT;
 //4.0
-let ROOM = "general";
 const chatCache = new Map(); //guarda los chats que fueron cargador en cache para consultar despues
 const MAIN_DIV = document.getElementById("main");
-const chatSelectorContainer = document.getElementById("chatSelectorContainer");
 let currentChatID;
 
 //                                                   DEFINICIONES DE FUNCIONES
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //4.0 creamos un boton de chat en el selector
-function renderChatSelector(chatId) {
-  const btn = document.createElement("button");
-  btn.textContent = chatId;
-  btn.dataset.chatId = chatId;
-  btn.className = "chatBtn";
-  chatSelectorContainer.appendChild(btn);
+function renderChatSelector(chats) {
+  const chatsContainer = document.getElementById("chatSelectorContainer");
+  chatsContainer.innerHTML = "";
+  chats.forEach((item) => {
+    const chatId = item.chatID;
+    const btn = document.createElement("button");
+    btn.textContent = chatId;
+    btn.dataset.chatId = chatId;
+    btn.className = "chatBtn";
+    chatsContainer.appendChild(btn);
+  });
 }
 
 //4.0 creamos un div para cada room (asi no tenemos que borrar y recargar MSGs cada vez)
@@ -50,6 +53,7 @@ async function renderRoom(chatId) {
   const messageInput = document.createElement("input");
   messageInput.type = "text";
   messageInput.id = `${chatId}_input`;
+  messageInput.className = "textInput";
   messageInput.placeholder = "Escribe un mensaje...";
   inputGroup.appendChild(messageInput);
 
@@ -62,7 +66,6 @@ async function renderRoom(chatId) {
 
   //- - - - - - - - - - - - - - Genero los listeners - - - - - - - - - - - - - -
   sendBtn.addEventListener("click", () => {
-    console.log(chatId);
     const message = messageInput.value.trim();
     if (message && USER) {
       socket.emit(
@@ -119,50 +122,67 @@ async function openChat(chatId) {
 
   const roomDiv = await renderRoom(chatId); //crea el div HTML y devuelve ese elemento
   chatCache.set(chatId, roomDiv);
-  /*
-  // si no está → pedir a la DB
-  const mensajes = await obtenerMensajes(chatId);
-
-  const contenedor = document.createElement("div");
-  contenedor.className = "chat-panel";
-  contenedor.dataset.chatId = chatId;
-
-  for (const m of mensajes) {
-    const p = document.createElement("p");
-    p.textContent = `${m.user}: ${m.texto}`;
-    contenedor.appendChild(p);
-  }
-
-  divMensajes.appendChild(contenedor);
-
-  mostrarChat(chatId);
-  */
 }
 
+//Es como un nuevo main, una vez que iniciaste sesion
 function EnterChat(username) {
   document.getElementById("loginContainer").style.display = "none";
   document.getElementById("main").style.display = "flex";
 
-  //4.0 genera un listener para cada boton de chat que vaya a generarse dinamicamnete
+  //4.0 genero los chat de la DB
+  socket.emit("chats_fetch", (chats) => {
+    renderChatSelector(chats); //item debera ser un chatID
+  });
+
+  //4.0 genera un listener para cada boton de chat que vaya a generarse dinamicamente
+  const chatSelectorContainer = document.getElementById(
+    "chatSelectorContainer",
+  );
   chatSelectorContainer.addEventListener("click", async (e) => {
     const btn = e.target.closest(".chatBtn");
     if (!btn) return;
 
     const chatId = btn.dataset.chatId; //id del chat seleccionado
-    await openChat(chatId);
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    //EL PROBLEMA ESTA ACA, JOIN MANDA A CARGAR LOS MENSAJES, ESO ESTA MAL, O AL MENOS DEBER HACERLO SOLO SI NO ESTA EN CACHE
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    socket.emit(
-      "join",
-      chatId,
-      username,
-      ModBright(USER_COLOR, -30),
-      USER_FONT,
-    );
+    if (!chatCache.has(chatId)) {
+      //solo se une la primera vez
+      socket.emit(
+        "join",
+        chatId,
+        username,
+        ModBright(USER_COLOR, -30),
+        USER_FONT,
+      );
+    }
+    await openChat(chatId);
+  });
+
+  const createChatBtn = document.getElementById("createChatBtn");
+  const chatNameInput = document.getElementById("chatNameInput");
+  const chatPasswordInput = document.getElementById("chatPasswordInput");
+
+  createChatBtn.addEventListener("click", () => {
+    const chatName = chatNameInput.value.trim();
+    const chatPassword = chatPasswordInput.value.trim();
+
+    if (chatName && chatName.length < 20) {
+      if (chatPassword.length < 20) {
+        socket.emit(
+          "createChat",
+          chatName,
+          chatPassword,
+          USER,
+          (validation) => {
+            if (validation) {
+              showAlert("Chat creado correctamente");
+              socket.emit("chats_fetch", (chats) => {
+                renderChatSelector(chats);
+              });
+            } else showAlert("El nombre del chat ya existe!");
+          },
+        );
+      } else showAlert("la contraseña debe tener menos de 20 caracteres!");
+    } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
   });
 }
 
@@ -217,10 +237,9 @@ signInBtn.addEventListener("click", () => {
     } else showAlert("la contraseña debe tener entre 1 y 20 caracteres!");
   } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
 });
-//                                                   MAIN
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//2.0 se llama al iniciar sesion (join)
+//                                                   MAIN (podria ir en EnterChat())
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 socket.on("history", (historyMessages, chat) => {
   const messagesDiv = document.getElementById(`${chat}_messages`);
   messagesDiv.innerHTML = "";
@@ -244,9 +263,3 @@ socket.on("message", (chat, msg, color, font) => {
 socket.on("disconnect", () => {
   console.log("Desconectado del servidor");
 });
-
-//LLAMADO A FUNCIONES
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-renderChatSelector("general");
-renderChatSelector("prueba");

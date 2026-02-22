@@ -20,15 +20,21 @@
     <div id="main" style="display: none">
       <div id="chatsListGroup">
         <h1>Lista de Chats</h1>
-        <div id="chatSelectorContainer">
-        </div>
+        <div id="chatSelectorContainer"></div>
         <div class="input-group">
           <input
             type="text"
-            id="messageInput"
+            id="chatNameInput"
+            class="textInput"
             placeholder="Nombre del chat..."
           />
-          <button id="sendBtn">CREAR CHAT</button>
+          <input
+            type="text"
+            id="chatPasswordInput"
+            class="textInput"
+            placeholder="Contraseña..."
+          />
+          <button id="createChatBtn" class="sendBtn">CREAR CHAT</button>
         </div>
       </div>
       <!--    -->

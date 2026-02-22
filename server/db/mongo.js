@@ -3,13 +3,15 @@ import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
 const database = process.env.MONGODB_DB_NAME || "mensajeria";
-const collectionName = process.env.MONGODB_COLLECTION || "messages";
-const usersCollection = process.env.MONGODB_USERS || "users";
+const messagesCollectionName = process.env.MONGODB_COLLECTION || "messages";
+const usersCollectionName = process.env.MONGODB_USERS || "users";
+const chatsCollectionName = process.env.MONGODB_CHATS || "chats";
 
 let warned = false;
 let client;
-let collection;
-let users;
+let messagesCollection;
+let usersCollection;
+let chatsCollection;
 
 export async function getMessagesCollection() {
   if (!uri) {
@@ -21,8 +23,8 @@ export async function getMessagesCollection() {
     }
     return null;
   }
-  if (collection) {
-    return collection;
+  if (messagesCollection) {
+    return messagesCollection;
   }
   if (!client) {
     client = new MongoClient(uri);
@@ -30,8 +32,8 @@ export async function getMessagesCollection() {
     console.log("[mongo] Conectado a MongoDB Atlas");
   }
 
-  collection = client.db(database).collection(collectionName); //realiza la peticion
-  return collection;
+  messagesCollection = client.db(database).collection(messagesCollectionName); //realiza la peticion
+  return messagesCollection;
 }
 
 export async function getUsersCollection() {
@@ -43,16 +45,37 @@ export async function getUsersCollection() {
       warned = true;
     }
   }
-  if (users) {
-    return users;
+  if (usersCollection) {
+    return usersCollection;
   }
   if (!client) {
     client = new MongoClient(uri);
     await client.connect();
     console.log("[mongo] Conectado a MongoDB Atlas");
   }
-  users = client.db(database).collection(usersCollection);
-  return users;
+  usersCollection = client.db(database).collection(usersCollectionName);
+  return usersCollection;
+}
+
+export async function getChatsCollection() {
+  if (!uri) {
+    if (!warned) {
+      console.warn(
+        "[mongo] Falta MONGODB_URI. Se usará almacenamiento en memoria.",
+      );
+      warned = true;
+    }
+  }
+  if (chatsCollection) {
+    return chatsCollection;
+  }
+  if (!client) {
+    client = new MongoClient(uri);
+    await client.connect();
+    console.log("[mongo] Conectado a MongoDB Atlas");
+  }
+  chatsCollection = client.db(database).collection(chatsCollectionName);
+  return chatsCollection;
 }
 
 export async function closeMongoConnection() {

@@ -22,11 +22,11 @@ body {
 }
 
 #chatsListGroup {
-  background: rgb(214, 255, 241);
+  background: linear-gradient(135deg, #ed3876 0%, #e5a5e3 100%);
   border-radius: 10px;
   width: 30vw;
   height: 90vh;
-  min-width: 330px;
+  min-width: 400px;
   display: flex;
   flex-direction: column;
 }
@@ -41,7 +41,8 @@ body {
 }
 
 .chatBtn {
-  background-color: #ffffff;
+  background: linear-gradient(163deg, #ffffff 0%, #ffa2fc 100%);
+  border-color: #852085;
   height: 7%;
   width: 95%;
   margin-top: 3%;
@@ -103,7 +104,7 @@ h1 {
   width: 100%;
 }
 
-#messageInput {
+.textInput {
   flex: 1;
   padding: 10px 15px;
   border: 1px solid #ddd;
@@ -111,6 +112,7 @@ h1 {
   font-size: 14px;
   outline: none;
   transition: border-color 0.3s;
+  width: 30%;
 }
 
 #messageInput:focus {
@@ -119,7 +121,7 @@ h1 {
 
 .sendBtn {
   padding: 10px 20px;
-  background: #667eea;
+  background: #735aa3;
   color: white;
   border: none;
   border-radius: 5px;

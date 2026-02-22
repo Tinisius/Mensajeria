@@ -8,7 +8,7 @@ export async function saveUser(username, password) {
     createdAt: new Date(),
   };
 
-  const users = await getUsersCollection();
+  const UsersCollection = await getUsersCollection();
 
   if (!password || password.length >= 20) {
     throw new Error("contraseña invalida"); //corta el flujo
@@ -17,8 +17,8 @@ export async function saveUser(username, password) {
     throw new Error("usuario invalida"); //corta el flujo
   }
 
-  if (users) {
-    await users.insertOne(normalized); //inserta el usuario
+  if (UsersCollection) {
+    await UsersCollection.insertOne(normalized); //inserta el usuario
   }
   return normalized;
 }

@@ -5,7 +5,12 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { getRecentMessages, saveMessage } from "./store/messages.js";
 import { saveUser } from "./store/users.js";
-import { userExists, matchPassword } from "./security/validations.js";
+import { getChats, saveChat } from "./store/chats.js";
+import {
+  userExists,
+  matchPassword,
+  chatExists,
+} from "./security/validations.js";
 import { closeMongoConnection } from "./db/mongo.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +25,28 @@ app.use(express.static(join(__dirname, "../client")));
 
 io.on("connection", async (socket) => {
   console.log(`usuario conectado con id: ${socket.id}`);
+
+  //4.0
+  socket.on(
+    "createChat",
+    async (chatName, chatPassword, username, callback) => {
+      const exists = await chatExists(chatName);
+      if (!exists) {
+        try {
+          await saveChat(chatName, chatPassword, username);
+          callback(true);
+        } catch (error) {
+          console.error("[mongo] Error guardando usuario:", error);
+          callback(false);
+        }
+      } else callback(false);
+    },
+  );
+
+  //4.0
+  socket.on("chats_fetch", async (chats) => {
+    chats(await getChats());
+  });
 
   //3.0
   socket.on("logIn", async (username, password, callback) => {

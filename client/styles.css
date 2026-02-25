@@ -19,6 +19,7 @@ body {
   height: 95vh;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 #chatsListGroup {
@@ -153,22 +154,6 @@ h1 {
 
 /**/
 
-.logContainer {
-  background: linear-gradient(135deg, #7b61ff 0%, #ff5eaa 100%);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
-  border-radius: 14px;
-  width: 100%;
-  max-width: 420px;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  color: #efc7fff5;
-  text-align: center;
-}
-
 #loginTitle {
   font-size: 2rem;
   font-weight: 700;
@@ -191,7 +176,24 @@ h1 {
   color: rgba(255, 255, 255, 0.75);
 }
 
-#loginContainer button.menuBtn {
+.logContainer {
+  background: linear-gradient(135deg, #7b61ff 0%, #ff5eaa 100%);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  border-radius: 14px;
+  width: 100%;
+  height: 36vh;
+  max-width: 420px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  color: #efc7fff5;
+  text-align: center;
+}
+
+.logContainer button.menuBtn {
   padding: 10px 16px;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -204,6 +206,6 @@ h1 {
     transform 0.08s ease;
 }
 
-#loginContainer button.menuBtn:hover {
+.logContainer button.menuBtn:hover {
   background: rgba(255, 255, 255, 0.18);
 }

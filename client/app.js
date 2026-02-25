@@ -35,7 +35,7 @@ async function renderLogChat(chatId, username) {
 
   const logBtn = document.createElement("button");
   logBtn.className = "menuBtn";
-  logBtn.textContent = "Enviar";
+  logBtn.textContent = "Ingresar";
   LogChatDiv.appendChild(logBtn);
 
   MAIN_DIV.appendChild(LogChatDiv);

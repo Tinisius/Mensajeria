@@ -57,27 +57,6 @@ async function renderLogChat(chatId, username) {
   return LogChatDiv;
 }
 
-//4.1
-async function openLogChat(chatId, username) {
-  let currentChat;
-  if (currentChatID) {
-    currentChat = document.getElementById(currentChatID);
-    currentChat.style.display = "none";
-  }
-
-  currentChatID = chatId; //la pantalla de logeo se toma como un chat abierto
-
-  if (chatCache.has(chatId)) {
-    //al igual que un chat, queda guardado en memoria
-    currentChat = document.getElementById(chatId); //el nuevo current chat
-    currentChat.style.display = "flex";
-    return;
-  }
-
-  const LogChatDiv = await renderLogChat(chatId, username);
-  chatCache.set(chatId, LogChatDiv);
-}
-
 //4.0 creamos todos los botones de los chats
 function renderChatSelector(chats) {
   const chatsContainer = document.getElementById("chatSelectorContainer");

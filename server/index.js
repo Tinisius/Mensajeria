@@ -81,7 +81,8 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("message", async (chat, msg, color, font) => {
-    io.emit("message", chat, msg, color, font);
+    //4.2
+    io.to(chat).emit("message", chat, msg, color, font);
     try {
       await saveMessage({ type: "message", text: msg, color, font }, chat);
     } catch (error) {
@@ -94,15 +95,15 @@ io.on("connection", async (socket) => {
 
   socket.on("join", async (chat, username, color, font) => {
     try {
+      socket.join(chat);
       const history = await getRecentMessages(50, chat); //obtiene los mensajes de cierto chat
       socket.emit("history", history, chat);
     } catch (error) {
       console.error("[history] Error cargando mensajes:", error);
     }
 
-    io.emit("join", chat, username, color, font);
-
-    //2.1 guarda el mensaje join
+    //4.2
+    io.to(chat).emit("join", chat, username, color, font);
     try {
       await saveMessage({ type: "join", text: username, color, font }, chat);
     } catch (error) {

@@ -10,8 +10,10 @@ import {
   userExists,
   matchPassword,
   chatExists,
+  matchChatPassword,
 } from "./security/validations.js";
 import { closeMongoConnection } from "./db/mongo.js";
+import { Socket } from "dgram";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,6 +27,10 @@ app.use(express.static(join(__dirname, "../client")));
 
 io.on("connection", async (socket) => {
   console.log(`usuario conectado con id: ${socket.id}`);
+
+  socket.on("logChat", async (chatId, password, callback) => {
+    callback(await matchChatPassword(chatId, password));
+  });
 
   //4.0
   socket.on(
@@ -45,7 +51,12 @@ io.on("connection", async (socket) => {
 
   //4.0
   socket.on("chats_fetch", async (chats) => {
-    chats(await getChats());
+    const chatArray = await getChats();
+    const chatArrayNoPass = chatArray.map((obj) => {
+      if (obj.chatPassword) return { ...obj, chatPassword: true };
+      else return { ...obj, chatPassword: false };
+    });
+    chats(chatArrayNoPass);
   });
 
   //3.0
@@ -82,7 +93,6 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("join", async (chat, username, color, font) => {
-    //2.0 obtiene los mensajes y llama a history para renderizarlos
     try {
       const history = await getRecentMessages(50, chat); //obtiene los mensajes de cierto chat
       socket.emit("history", history, chat);

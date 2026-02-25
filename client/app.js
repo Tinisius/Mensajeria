@@ -17,17 +17,93 @@ let currentChatID;
 //                                                   DEFINICIONES DE FUNCIONES
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//4.0 creamos un boton de chat en el selector
+async function renderLogChat(chatId, username) {
+  const LogChatDiv = document.createElement("div");
+  LogChatDiv.id = chatId;
+  LogChatDiv.className = "logContainer";
+
+  const title = document.createElement("h1");
+  title.textContent = `Acceder a: ${chatId}`;
+  LogChatDiv.appendChild(title);
+
+  const passwordInput = document.createElement("input");
+  passwordInput.type = "text";
+  passwordInput.id = `${chatId}_password_input`;
+  passwordInput.className = "menuInput";
+  passwordInput.placeholder = "Contraseña...";
+  LogChatDiv.appendChild(passwordInput);
+
+  const logBtn = document.createElement("button");
+  logBtn.className = "menuBtn";
+  logBtn.textContent = "Enviar";
+  LogChatDiv.appendChild(logBtn);
+
+  MAIN_DIV.appendChild(LogChatDiv);
+
+  logBtn.addEventListener("click", () => {
+    const password = passwordInput.value.trim();
+    socket.emit("logChat", chatId, password, async (validation) => {
+      if (validation) {
+        LogChatDiv.remove();
+        currentChatID = null;
+        chatCache.delete(chatId);
+        await openChat(chatId, username, validation);
+      } else {
+        showAlert("contraseña incorrecta");
+      }
+    });
+  });
+
+  return LogChatDiv;
+}
+
+//4.1
+async function openLogChat(chatId, username) {
+  let currentChat;
+  if (currentChatID) {
+    currentChat = document.getElementById(currentChatID);
+    currentChat.style.display = "none";
+  }
+
+  currentChatID = chatId; //la pantalla de logeo se toma como un chat abierto
+
+  if (chatCache.has(chatId)) {
+    //al igual que un chat, queda guardado en memoria
+    currentChat = document.getElementById(chatId); //el nuevo current chat
+    currentChat.style.display = "flex";
+    return;
+  }
+
+  const LogChatDiv = await renderLogChat(chatId, username);
+  chatCache.set(chatId, LogChatDiv);
+}
+
+//4.0 creamos todos los botones de los chats
 function renderChatSelector(chats) {
   const chatsContainer = document.getElementById("chatSelectorContainer");
   chatsContainer.innerHTML = "";
+
   chats.forEach((item) => {
+    const chatDiv = document.createElement("div");
+
+    chatDiv.style.display = "flex";
+    chatDiv.style.flexDirection = "row";
+    chatDiv.style.width = "100%";
+    chatDiv.style.height = "7%";
+
     const chatId = item.chatID;
     const btn = document.createElement("button");
     btn.textContent = chatId;
     btn.dataset.chatId = chatId;
     btn.className = "chatBtn";
-    chatsContainer.appendChild(btn);
+    chatDiv.appendChild(btn);
+
+    const passImage = document.createElement("img");
+    passImage.src = item.chatPassword ? "close.ico" : "open.ico";
+    //passImage.style.height = "100%";
+    chatDiv.appendChild(passImage);
+
+    chatsContainer.appendChild(chatDiv);
   });
 }
 
@@ -103,7 +179,7 @@ function renderMessage(chat, msg, color, font, type = "message") {
 }
 
 //4.0 se encarga de mostrar un chat que ya fue cargado o reenderizar uno nuevo
-async function openChat(chatId) {
+async function openChat(chatId, username, validation) {
   let currentChat;
   //oculta el anterior chat si es que existe
   if (currentChatID) {
@@ -120,12 +196,24 @@ async function openChat(chatId) {
     return;
   }
 
-  const roomDiv = await renderRoom(chatId); //crea el div HTML y devuelve ese elemento
-  chatCache.set(chatId, roomDiv);
+  if (validation) {
+    socket.emit(
+      "join",
+      chatId,
+      username,
+      ModBright(USER_COLOR, -30),
+      USER_FONT,
+    );
+    const roomDiv = await renderRoom(chatId); //crea el div HTML y devuelve ese elemento
+    chatCache.set(chatId, roomDiv);
+  } else {
+    const LogChatDiv = await renderLogChat(chatId, username);
+    chatCache.set(chatId, LogChatDiv);
+  }
 }
 
 //Es como un nuevo main, una vez que iniciaste sesion
-function EnterChat(username) {
+function EnterChatMain(username) {
   document.getElementById("loginContainer").style.display = "none";
   document.getElementById("main").style.display = "flex";
 
@@ -144,17 +232,10 @@ function EnterChat(username) {
 
     const chatId = btn.dataset.chatId; //id del chat seleccionado
 
-    if (!chatCache.has(chatId)) {
-      //solo se une la primera vez
-      socket.emit(
-        "join",
-        chatId,
-        username,
-        ModBright(USER_COLOR, -30),
-        USER_FONT,
-      );
-    }
-    await openChat(chatId);
+    //4.1
+    socket.emit("logChat", chatId, "", async (validation) => {
+      await openChat(chatId, username, validation); //abre el chat o el LogChat
+    });
   });
 
   const createChatBtn = document.getElementById("createChatBtn");
@@ -209,7 +290,7 @@ loginBtn.addEventListener("click", () => {
         else USER_FONT = "#3b3b3b";
         USER = username;
         USER_COLOR = color;
-        EnterChat(username);
+        EnterChatMain(username);
       } else showAlert("Usuario o contraseña incorrectos!");
     });
   } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
@@ -231,14 +312,14 @@ signInBtn.addEventListener("click", () => {
           else USER_FONT = "#3b3b3b";
           USER = username;
           USER_COLOR = color;
-          EnterChat(username);
+          EnterChatMain(username);
         } else showAlert("Usuario ya existe!");
       });
     } else showAlert("la contraseña debe tener entre 1 y 20 caracteres!");
   } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
 });
 
-//                                                   MAIN (podria ir en EnterChat())
+//                                                   MAIN (podria ir en EnterChatMain())
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 socket.on("history", (historyMessages, chat) => {
   const messagesDiv = document.getElementById(`${chat}_messages`);

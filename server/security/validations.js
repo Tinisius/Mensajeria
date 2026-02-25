@@ -27,3 +27,12 @@ export async function chatExists(chatName) {
   const chat = await chatsCollection.findOne({ chatID: chatName });
   return chat ? true : false;
 }
+
+export async function matchChatPassword(chatName, password) {
+  const chatsCollection = await getChatsCollection();
+  if (!chatsCollection) {
+    return null;
+  }
+  const chat = await chatsCollection.findOne({ chatID: chatName });
+  return chat.chatPassword === password;
+}

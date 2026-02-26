@@ -16,6 +16,7 @@ export async function saveMessage(message, chat) {
   const normalized = {
     chat: chat,
     type: message.type,
+    user: message.user,
     text: message.text,
     color: message.color,
     font: message.font,

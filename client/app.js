@@ -123,13 +123,7 @@ async function renderRoom(chatId) {
   sendBtn.addEventListener("click", () => {
     const message = messageInput.value.trim();
     if (message && USER) {
-      socket.emit(
-        "message",
-        chatId,
-        USER + ": " + message,
-        USER_COLOR,
-        USER_FONT,
-      );
+      socket.emit("message", chatId, USER, message, USER_COLOR, USER_FONT);
       messageInput.value = "";
       messageInput.focus();
     }
@@ -144,17 +138,26 @@ async function renderRoom(chatId) {
   return roomDiv;
 }
 
-function renderMessage(chat, msg, color, font, type = "message") {
+function renderMessage(chat, username, msg, color, font, type = "message") {
   const messageElem = document.createElement("div");
   messageElem.className = type; //message - join
-  messageElem.textContent = type === "message" ? msg : `${msg} se ha unido`;
   messageElem.style.backgroundColor = color;
   messageElem.style.color = font;
+  messageElem.textContent =
+    type === "message" ? `${username}:${msg}` : `${username} se ha unido`;
+
+  const addFriend = document.createElement("img");
+  addFriend.className = "icon";
+  addFriend.src = "addUser.ico";
 
   const messagesDiv = document.getElementById(`${chat}_messages`);
-
   messagesDiv.appendChild(messageElem);
+  messageElem.appendChild(addFriend);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  addFriend.addEventListener("click", async () => {
+    console.log(msg);
+  });
 }
 
 //4.0 se encarga de mostrar un chat que ya fue cargado o reenderizar uno nuevo
@@ -233,12 +236,12 @@ function EnterChatMain(username) {
           chatPassword,
           USER,
           (validation) => {
-            if (validation) {
+            if (validation.status) {
               showAlert("Chat creado correctamente");
               socket.emit("chats_fetch", (chats) => {
                 renderChatSelector(chats);
               });
-            } else showAlert("El nombre del chat ya existe!");
+            } else showAlert(validation.error);
           },
         );
       } else showAlert("la contraseña debe tener menos de 20 caracteres!");
@@ -285,14 +288,15 @@ signInBtn.addEventListener("click", () => {
   if (username && username.length < 20) {
     if (password && password.length < 20) {
       socket.emit("signIn", username, password, (validation) => {
-        if (validation) {
+        if (validation.status) {
           showAlert("usuario creado correctamente");
           if (HEXbright(color) < 128) USER_FONT = "#ececec";
           else USER_FONT = "#3b3b3b";
           USER = username;
           USER_COLOR = color;
           EnterChatMain(username);
-        } else showAlert("Usuario ya existe!");
+        }
+        showAlert(validation.error);
       });
     } else showAlert("la contraseña debe tener entre 1 y 20 caracteres!");
   } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
@@ -305,16 +309,16 @@ socket.on("history", (historyMessages, chat) => {
   messagesDiv.innerHTML = "";
   //renderiza todos los mensajes de la DB
   historyMessages.forEach((item) => {
-    renderMessage(chat, item.text, item.color, item.font, item.type);
+    renderMessage(chat, item.user, item.text, item.color, item.font, item.type);
   });
 });
 
-socket.on("join", (chat, USER, color, font) => {
-  renderMessage(chat, USER, color, font, "join");
+socket.on("join", (chat, username, color, font) => {
+  renderMessage(chat, username, "", color, font, "join");
 });
 
-socket.on("message", (chat, msg, color, font) => {
-  renderMessage(chat, msg, color, font);
+socket.on("message", (chat, username, msg, color, font) => {
+  renderMessage(chat, username, msg, color, font);
 });
 
 //                                                   LISTENERS DE MAIN

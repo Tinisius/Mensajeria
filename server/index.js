@@ -13,7 +13,6 @@ import {
   matchChatPassword,
 } from "./security/validations.js";
 import { closeMongoConnection } from "./db/mongo.js";
-import { Socket } from "dgram";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,6 +21,8 @@ const app = express();
 const PORT = Number(process.env.PORT || 8000);
 const server = http.createServer(app);
 const io = new Server(server);
+
+const lastChat = new Map();
 
 app.use(express.static(join(__dirname, "../client")));
 
@@ -36,16 +37,36 @@ io.on("connection", async (socket) => {
   socket.on(
     "createChat",
     async (chatName, chatPassword, username, callback) => {
+      const now = Date.now();
+      if (lastChat.has(socket.id) && now - lastChat.get(socket.id) < 60000) {
+        callback({
+          status: false,
+          error: "Espera un poco antes de crear otro chat!",
+        });
+        return;
+      }
+      lastChat.set(socket.id, now);
+
       const exists = await chatExists(chatName);
       if (!exists) {
         try {
           await saveChat(chatName, chatPassword, username);
-          callback(true);
+          callback({
+            status: true,
+            error: "creado correctamente!",
+          });
         } catch (error) {
           console.error("[mongo] Error guardando usuario:", error);
-          callback(false);
+          callback({
+            status: false,
+            error: "Espera un poco antes de crear otro chat!",
+          });
         }
-      } else callback(false);
+      } else
+        callback({
+          status: false,
+          error: "El nombre del chat ya existe!",
+        });
     },
   );
 
@@ -72,19 +93,32 @@ io.on("connection", async (socket) => {
     if (!exists) {
       try {
         await saveUser(username, password);
-        callback(true);
+        callback({
+          status: true,
+          error: "Usuario creado con exito!",
+        });
       } catch (error) {
         console.error("[mongo] Error guardando usuario:", error);
-        callback(false);
+        callback({
+          status: false,
+          error: "Error creando usuario",
+        });
       }
-    } else callback(false);
+    } else
+      callback({
+        status: false,
+        error: "El usuario ya existe!!",
+      });
   });
 
-  socket.on("message", async (chat, msg, color, font) => {
+  socket.on("message", async (chat, username, msg, color, font) => {
     //4.2
-    io.to(chat).emit("message", chat, msg, color, font);
+    io.to(chat).emit("message", chat, username, msg, color, font);
     try {
-      await saveMessage({ type: "message", text: msg, color, font }, chat);
+      await saveMessage(
+        { type: "message", user: username, text: msg, color, font },
+        chat,
+      );
     } catch (error) {
       console.error(
         `[mongo] Error guardando mensaje en el chat:${chat}:`,
@@ -105,7 +139,10 @@ io.on("connection", async (socket) => {
     //4.2
     io.to(chat).emit("join", chat, username, color, font);
     try {
-      await saveMessage({ type: "join", text: username, color, font }, chat);
+      await saveMessage(
+        { type: "join", user: username, text: "", color, font },
+        chat,
+      );
     } catch (error) {
       console.error("[mongo] Error guardando join:", error);
     }

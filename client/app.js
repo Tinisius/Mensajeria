@@ -65,10 +65,13 @@ function renderChatSelector(chats) {
   chats.forEach((item) => {
     const chatDiv = document.createElement("div");
 
+    chatDiv.classList.add("chatDiv");
+    /*
     chatDiv.style.display = "flex";
     chatDiv.style.flexDirection = "row";
     chatDiv.style.width = "100%";
     chatDiv.style.height = "7%";
+    */
 
     const chatId = item.chatID;
     const btn = document.createElement("button");
@@ -79,7 +82,7 @@ function renderChatSelector(chats) {
 
     const passImage = document.createElement("img");
     passImage.src = item.chatPassword ? "close.ico" : "open.ico";
-    //passImage.style.height = "100%";
+    passImage.className = "icon";
     chatDiv.appendChild(passImage);
 
     chatsContainer.appendChild(chatDiv);

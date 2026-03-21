@@ -233,6 +233,9 @@ h1 {
     width: 90vw;
     height: 30vh;
   }
+  #chatsListGroup .chatBtn {
+    height: 15vh;
+  }
 
   .chatContainer {
     width: 90vw;

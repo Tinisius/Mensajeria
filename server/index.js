@@ -45,12 +45,12 @@ io.on("connection", async (socket) => {
         });
         return;
       }
-      lastChat.set(socket.id, now);
 
       const exists = await chatExists(chatName);
       if (!exists) {
         try {
           await saveChat(chatName, chatPassword, username);
+          lastChat.set(socket.id, now);
           callback({
             status: true,
             error: "creado correctamente!",
@@ -59,7 +59,7 @@ io.on("connection", async (socket) => {
           console.error("[mongo] Error guardando usuario:", error);
           callback({
             status: false,
-            error: "Espera un poco antes de crear otro chat!",
+            error: "Error creando chat",
           });
         }
       } else
@@ -92,7 +92,11 @@ io.on("connection", async (socket) => {
     const exists = await userExists(username);
     if (!exists) {
       try {
-        await saveUser(username, password);
+        const ip =
+          socket.handshake.headers["x-forwarded-for"] ||
+          socket.handshake.address;
+
+        await saveUser(username, password, ip);
         callback({
           status: true,
           error: "Usuario creado con exito!",

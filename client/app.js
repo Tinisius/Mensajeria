@@ -6,9 +6,11 @@ socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
 
-let USER;
-let USER_COLOR;
-let USER_FONT;
+let USER = {
+  name: "",
+  color: null,
+  font_color: null,
+};
 //4.0
 const chatCache = new Map(); //guarda los chats que fueron cargador en cache para consultar despues
 const MAIN_DIV = document.getElementById("main");
@@ -125,8 +127,15 @@ async function renderRoom(chatId) {
   //- - - - - - - - - - - - - - Genero los listeners - - - - - - - - - - - - - -
   sendBtn.addEventListener("click", () => {
     const message = messageInput.value.trim();
-    if (message && USER) {
-      socket.emit("message", chatId, USER, message, USER_COLOR, USER_FONT);
+    if (message && USER.name) {
+      socket.emit(
+        "message",
+        chatId,
+        USER.name,
+        message,
+        USER.color,
+        USER.font_color,
+      );
       messageInput.value = "";
       messageInput.focus();
     }
@@ -186,8 +195,8 @@ async function openChat(chatId, username, validation) {
       "join",
       chatId,
       username,
-      ModBright(USER_COLOR, -30),
-      USER_FONT,
+      ModBright(USER.color, -30),
+      USER.font_color,
     );
     const roomDiv = await renderRoom(chatId); //crea el div HTML y devuelve ese elemento
     chatCache.set(chatId, roomDiv);
@@ -237,7 +246,7 @@ function EnterChatMain(username) {
           "createChat",
           chatName,
           chatPassword,
-          USER,
+          USER.name,
           (validation) => {
             if (validation.status) {
               showAlert("Chat creado correctamente");
@@ -271,10 +280,10 @@ loginBtn.addEventListener("click", () => {
   if (username && username.length < 20) {
     socket.emit("logIn", username, password, (validation) => {
       if (validation) {
-        if (HEXbright(color) < 128) USER_FONT = "#ececec";
-        else USER_FONT = "#3b3b3b";
-        USER = username;
-        USER_COLOR = color;
+        if (HEXbright(color) < 128) USER.font_color = "#ececec";
+        else USER.font_color = "#3b3b3b";
+        USER.name = username;
+        USER.color = color;
         EnterChatMain(username);
       } else showAlert("Usuario o contraseña incorrectos!");
     });
@@ -293,10 +302,10 @@ signInBtn.addEventListener("click", () => {
       socket.emit("signIn", username, password, (validation) => {
         if (validation.status) {
           showAlert("usuario creado correctamente");
-          if (HEXbright(color) < 128) USER_FONT = "#ececec";
-          else USER_FONT = "#3b3b3b";
-          USER = username;
-          USER_COLOR = color;
+          if (HEXbright(color) < 128) USER.font_color = "#ececec";
+          else USER.font_color = "#3b3b3b";
+          USER.name = username;
+          USER.color = color;
           EnterChatMain(username);
         }
         showAlert(validation.error);

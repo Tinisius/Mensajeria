@@ -1,10 +1,11 @@
 ///3.0
 import { getUsersCollection } from "../db/mongo.js";
 
-export async function saveUser(username, password) {
+export async function saveUser(username, password, ip) {
   const normalized = {
     user: username,
     password: password,
+    ip,
     createdAt: new Date(),
   };
 
@@ -14,7 +15,7 @@ export async function saveUser(username, password) {
     throw new Error("contraseña invalida"); //corta el flujo
   }
   if (!username || username.length >= 20) {
-    throw new Error("usuario invalida"); //corta el flujo
+    throw new Error("usuario invalido"); //corta el flujo
   }
 
   if (UsersCollection) {

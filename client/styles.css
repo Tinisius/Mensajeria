@@ -56,7 +56,6 @@ body {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 7%;
   align-items: center;
 }
 
@@ -222,24 +221,37 @@ h1 {
 .logContainer button.menuBtn:hover {
   background: rgba(255, 255, 255, 0.18);
 }
-
+#alternator {
+  display: none;
+}
 /*para celular*/
 @media (max-width: 768px) {
   #main {
     flex-direction: column;
   }
+  #alternator {
+    display: block;
+    aspect-ratio: 1 / 1;
+    border-radius: 30%;
+    margin: 10px;
+    background: linear-gradient(163deg, #ffffff 0%, #ffa2fc 100%);
+    border-color: #852085;
+
+    background-image: url("list-icon-32.png");
+    background-size: cover; /* Resizes the image to cover the entire button area */
+  }
 
   #chatsListGroup {
     width: 90vw;
-    height: 30vh;
+    height: 90vh;
   }
   #chatsListGroup .chatBtn {
-    height: 15vh;
+    height: 4vh;
   }
 
   .chatContainer {
     width: 90vw;
-    height: 60vh;
+    height: 70vh;
   }
 
   #chatSelectorContainer {
@@ -247,6 +259,6 @@ h1 {
   }
 
   .chatDiv {
-    height: 50%;
+    height: auto;
   }
 }

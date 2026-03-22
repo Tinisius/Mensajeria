@@ -16,6 +16,9 @@ const chatCache = new Map(); //guarda los chats que fueron cargador en cache par
 const MAIN_DIV = document.getElementById("main");
 let currentChatID;
 
+const MEDIA = window.matchMedia("(max-width: 768px)");
+MEDIA.addEventListener("change", () => {});
+
 //                                                   DEFINICIONES DE FUNCIONES
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -68,12 +71,6 @@ function renderChatSelector(chats) {
     const chatDiv = document.createElement("div");
 
     chatDiv.classList.add("chatDiv");
-    /*
-    chatDiv.style.display = "flex";
-    chatDiv.style.flexDirection = "row";
-    chatDiv.style.width = "100%";
-    chatDiv.style.height = "7%";
-    */
 
     const chatId = item.chatID;
     const btn = document.createElement("button");
@@ -228,6 +225,10 @@ function EnterChatMain(username) {
 
     //4.1
     socket.emit("logChat", chatId, "", async (validation) => {
+      if (MEDIA.matches) {
+        document.getElementById("chatsListGroup").style.height = "20vh"; //default 90vh
+        document.getElementById("chatSelectorContainer").style.display = "none"; //default 90vh
+      }
       await openChat(chatId, username, validation); //abre el chat o el LogChat
     });
   });
@@ -258,6 +259,16 @@ function EnterChatMain(username) {
         );
       } else showAlert("la contraseña debe tener menos de 20 caracteres!");
     } else showAlert("el nombre debe tener entre 1 y 20 caracteres!");
+  });
+
+  const alternator = document.getElementById("alternator");
+
+  alternator.addEventListener("click", () => {
+    if (currentChatID) {
+      document.getElementById(currentChatID).style.display = "none";
+      document.getElementById("chatsListGroup").style.height = "90vh";
+      document.getElementById("chatSelectorContainer").style.display = "flex";
+    }
   });
 }
 

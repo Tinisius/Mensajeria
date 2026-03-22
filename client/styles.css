@@ -38,7 +38,6 @@ body {
   border-radius: 10px;
   width: 30vw;
   height: 90vh;
-  min-width: 400px;
   display: flex;
   flex-direction: column;
 }
@@ -81,7 +80,6 @@ body {
 
 h1 {
   padding: 20px;
-  border-bottom: 2px solid #667eea;
   color: #333;
   text-align: center;
 }

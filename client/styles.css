@@ -237,7 +237,7 @@ h1 {
     background: linear-gradient(163deg, #ffffff 0%, #ffa2fc 100%);
     border-color: #852085;
 
-    background-image: url("list-icon-32.png");
+    background-image: url("list.ico");
     background-size: cover; /* Resizes the image to cover the entire button area */
   }
 

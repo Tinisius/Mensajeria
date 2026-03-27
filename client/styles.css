@@ -170,6 +170,11 @@ h1 {
   letter-spacing: 0.2px;
 }
 
+#colorPicker {
+  aspect-ratio: 3 / 2;
+  height: auto;
+}
+
 .menuInput {
   flex: 1;
   padding: 10px 14px;
@@ -190,7 +195,7 @@ h1 {
   background: linear-gradient(135deg, #7b61ff 0%, #ff5eaa 100%);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
   border-radius: 14px;
-  width: 100%;
+  width: max(300px, 36vh);
   height: 36vh;
   max-width: 420px;
   padding: 28px;
@@ -235,7 +240,7 @@ h1 {
     background: linear-gradient(163deg, #ffffff 0%, #ffa2fc 100%);
     border-color: #852085;
 
-    background-image: url("list.ico");
+    background-image: url("assets/list.ico");
     background-size: cover; /* Resizes the image to cover the entire button area */
   }
 

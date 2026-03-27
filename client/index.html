@@ -5,23 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TinisiusChat</title>
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
   </head>
   <body>
     <div id="loginContainer" class="logContainer" style="display: flex">
-      <h2 id="loginTitle">!Bienvenido!</h1>
-      <input type="text" id="loginInput" class="menuInput" placeholder="Escribe tu nombre" />   
-      <input type="text" id="passwordInput" class="menuInput" placeholder="Contraseña" />       
-      <input type="color" id="colorPicker" value="#f0f0f0">
+      <h2 id="loginTitle">!Bienvenido!</h2>
+      <input
+        type="text"
+        id="loginInput"
+        class="menuInput"
+        placeholder="Escribe tu nombre"
+      />
+      <input
+        type="text"
+        id="passwordInput"
+        class="menuInput"
+        placeholder="Contraseña"
+      />
+      <input type="color" id="colorPicker" value="#f0f0f0" />
       <button id="loginBtn" class="menuBtn">Ingresar</button>
       <button id="signInBtn" class="menuBtn">Crear cuenta</button>
     </div>
 
     <div id="main" style="display: none">
       <div id="chatsListGroup">
-        <div style="display: flex; width: 100%; border-bottom: 2px solid #f0f0f0;">
-        <h1 style="margin: auto;">Lista de Chats</h1>
-        <button id="alternator"></button>
+        <div
+          style="display: flex; width: 100%; border-bottom: 2px solid #f0f0f0"
+        >
+          <h1 style="margin: auto">Lista de Chats</h1>
+          <button id="alternator"></button>
         </div>
         <div id="chatSelectorContainer"></div>
         <div class="input-group">

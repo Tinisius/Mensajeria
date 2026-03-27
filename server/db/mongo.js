@@ -82,6 +82,6 @@ export async function closeMongoConnection() {
   if (client) {
     await client.close();
     client = undefined;
-    collection = undefined;
+    chatsCollection = usersCollection = messagesCollection = undefined;
   }
 }

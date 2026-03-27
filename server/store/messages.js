@@ -49,7 +49,7 @@ export async function getRecentMessages(limit = 50, chat) {
 
   //devuelve la coleccion ordenada y truncada en forma de array (no filtra pero podria)
   const docs = await collection
-    .find({ chat: chat }) //sin filtro
+    .find({ chat: chat })
     .sort({ createdAt: -1 })
     .limit(safeLimit)
     .toArray();

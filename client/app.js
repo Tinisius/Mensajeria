@@ -23,33 +23,33 @@ MEDIA.addEventListener("change", () => {});
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 async function renderLogChat(chatId, username) {
-  const LogChatDiv = document.createElement("div");
-  LogChatDiv.id = chatId;
-  LogChatDiv.className = "logContainer";
+  const logChatDiv = document.createElement("div");
+  logChatDiv.id = chatId;
+  logChatDiv.className = "logContainer";
 
   const title = document.createElement("h1");
   title.textContent = `Acceder a: ${chatId}`;
-  LogChatDiv.appendChild(title);
+  logChatDiv.appendChild(title);
 
   const passwordInput = document.createElement("input");
   passwordInput.type = "text";
   passwordInput.id = `${chatId}_password_input`;
   passwordInput.className = "menuInput";
   passwordInput.placeholder = "Contraseña...";
-  LogChatDiv.appendChild(passwordInput);
+  logChatDiv.appendChild(passwordInput);
 
   const logBtn = document.createElement("button");
   logBtn.className = "menuBtn";
   logBtn.textContent = "Ingresar";
-  LogChatDiv.appendChild(logBtn);
+  logChatDiv.appendChild(logBtn);
 
-  MAIN_DIV.appendChild(LogChatDiv);
+  MAIN_DIV.appendChild(logChatDiv);
 
   logBtn.addEventListener("click", () => {
     const password = passwordInput.value.trim();
     socket.emit("logChat", chatId, password, async (validation) => {
       if (validation) {
-        LogChatDiv.remove();
+        logChatDiv.remove();
         currentChatID = null;
         chatCache.delete(chatId);
         await openChat(chatId, username, validation);
@@ -58,12 +58,17 @@ async function renderLogChat(chatId, username) {
       }
     });
   });
+  passwordInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      logBtn.click();
+    }
+  });
 
-  return LogChatDiv;
+  return logChatDiv;
 }
 
 //4.0 creamos todos los botones de los chats
-function renderChatSelector(chats) {
+function renderChatsSelectors(chats) {
   const chatsContainer = document.getElementById("chatSelectorContainer");
   chatsContainer.innerHTML = "";
 
@@ -80,7 +85,7 @@ function renderChatSelector(chats) {
     chatDiv.appendChild(btn);
 
     const passImage = document.createElement("img");
-    passImage.src = item.chatPassword ? "close.ico" : "open.ico";
+    passImage.src = item.chatPassword ? "assets/close.ico" : "assets/open.ico";
     passImage.className = "icon";
     chatDiv.appendChild(passImage);
 
@@ -157,7 +162,7 @@ function renderMessage(chat, username, msg, color, font, type = "message") {
 
   const addFriend = document.createElement("img");
   addFriend.className = "icon";
-  addFriend.src = "addUser.ico";
+  addFriend.src = "assets/addUser.ico";
 
   const messagesDiv = document.getElementById(`${chat}_messages`);
   messagesDiv.appendChild(messageElem);
@@ -171,23 +176,22 @@ function renderMessage(chat, username, msg, color, font, type = "message") {
 
 //4.0 se encarga de mostrar un chat que ya fue cargado o reenderizar uno nuevo
 async function openChat(chatId, username, validation) {
-  let currentChat;
   //oculta el anterior chat si es que existe
   if (currentChatID) {
-    currentChat = document.getElementById(currentChatID);
-    currentChat.style.display = "none";
+    document.getElementById(currentChatID).style.display = "none";
   }
 
   currentChatID = chatId;
 
   // si ya está cargado → solo mostrar
   if (chatCache.has(chatId)) {
-    currentChat = document.getElementById(chatId); //el nuevo current chat
-    currentChat.style.display = "flex";
+    chatCache.get(chatId).style.display = "flex";
     return;
   }
 
   if (validation) {
+    const roomDiv = await renderRoom(chatId); //crea el div HTML y devuelve ese elemento
+    chatCache.set(chatId, roomDiv);
     socket.emit(
       "join",
       chatId,
@@ -195,11 +199,9 @@ async function openChat(chatId, username, validation) {
       ModBright(USER.color, -30),
       USER.font_color,
     );
-    const roomDiv = await renderRoom(chatId); //crea el div HTML y devuelve ese elemento
-    chatCache.set(chatId, roomDiv);
   } else {
-    const LogChatDiv = await renderLogChat(chatId, username);
-    chatCache.set(chatId, LogChatDiv);
+    const logChatDiv = await renderLogChat(chatId, username);
+    chatCache.set(chatId, logChatDiv);
   }
 }
 
@@ -210,7 +212,7 @@ function EnterChatMain(username) {
 
   //4.0 genero los chat de la DB
   socket.emit("chats_fetch", (chats) => {
-    renderChatSelector(chats); //item debera ser un chatID
+    renderChatsSelectors(chats);
   });
 
   //4.0 genera un listener para cada boton de chat que vaya a generarse dinamicamente
@@ -227,7 +229,7 @@ function EnterChatMain(username) {
     socket.emit("logChat", chatId, "", async (validation) => {
       if (MEDIA.matches) {
         document.getElementById("chatsListGroup").style.height = "20vh"; //default 90vh
-        document.getElementById("chatSelectorContainer").style.display = "none"; //default 90vh
+        document.getElementById("chatSelectorContainer").style.display = "none";
       }
       await openChat(chatId, username, validation); //abre el chat o el LogChat
     });
@@ -252,7 +254,7 @@ function EnterChatMain(username) {
             if (validation.status) {
               showAlert("Chat creado correctamente");
               socket.emit("chats_fetch", (chats) => {
-                renderChatSelector(chats);
+                renderChatsSelectors(chats);
               });
             } else showAlert(validation.error);
           },
@@ -343,9 +345,6 @@ socket.on("join", (chat, username, color, font) => {
 socket.on("message", (chat, username, msg, color, font) => {
   renderMessage(chat, username, msg, color, font);
 });
-
-//                                                   LISTENERS DE MAIN
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 socket.on("disconnect", () => {
   console.log("Desconectado del servidor");

@@ -195,8 +195,8 @@ h1 {
   background: linear-gradient(135deg, #7b61ff 0%, #ff5eaa 100%);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
   border-radius: 14px;
-  width: max(300px, 36vh);
-  height: 36vh;
+  width: 100%;
+  height: max(300px, 36vh);
   max-width: 420px;
   padding: 28px;
   display: flex;

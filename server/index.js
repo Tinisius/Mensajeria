@@ -119,10 +119,14 @@ io.on("connection", async (socket) => {
     //4.2
     io.to(chat).emit("message", chat, username, msg, color, font);
     try {
-      await saveMessage(
-        { type: "message", user: username, text: msg, color, font },
-        chat,
-      );
+      await saveMessage({
+        chat: chat,
+        type: "message",
+        user: username,
+        text: msg,
+        color,
+        font,
+      });
     } catch (error) {
       console.error(
         `[mongo] Error guardando mensaje en el chat:${chat}:`,
@@ -143,12 +147,26 @@ io.on("connection", async (socket) => {
     //4.2
     io.to(chat).emit("join", chat, username, color, font);
     try {
-      await saveMessage(
-        { type: "join", user: username, text: "", color, font },
-        chat,
-      );
+      await saveMessage({
+        chat: chat,
+        type: "join",
+        user: username,
+        text: "",
+        color,
+        font,
+      });
     } catch (error) {
       console.error("[mongo] Error guardando join:", error);
+    }
+  });
+
+  socket.on("ticTacToe", async (obj) => {
+    if (obj.type === "TTT_pending") {
+      obj = await saveMessage(obj); //MODIFICA EL OBJ PARA AGREGARLE EL ID
+      io.to(obj.chat).emit("ticTacToe", obj);
+    }
+    if (obj.type === "TTT_move" || obj.type === "TTT_winner") {
+      await editTicTacToe(obj);
     }
   });
 });

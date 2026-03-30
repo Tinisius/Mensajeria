@@ -1,4 +1,5 @@
 ///2.0 se encarga de obtener los mensajes y devolverlos al servidor y de recibir los mensajes del dervidor y guardarlos en la DB
+import { normalize } from "path";
 import { getMessagesCollection } from "../db/mongo.js";
 
 const inMemoryMessages = []; //si falla la conexion con la DB, guarda los mensajes en memoria
@@ -11,17 +12,27 @@ function trimInMemory() {
 }
 
 //guarda el mensaje
-export async function saveMessage(message, chat) {
+export async function saveMessage(message) {
   //normalized seria el mensaje a guardar
   const normalized = {
-    chat: chat,
+    chat: message.chat,
     type: message.type,
-    user: message.user,
-    text: message.text,
-    color: message.color,
-    font: message.font,
     createdAt: new Date(),
   };
+
+  if (message.type === "TTT_pending") {
+    normalized.data = {
+      users: [message.user, null],
+      board: Array(9).fill(null),
+      turn: "×",
+      winner: null,
+    };
+  } else {
+    normalized.user = message.user;
+    normalized.text = message.text;
+    normalized.color = message.color;
+    normalized.font = message.font;
+  }
 
   const collection = await getMessagesCollection(); //obtiene la colleccion de msg de la DB
 
@@ -31,8 +42,23 @@ export async function saveMessage(message, chat) {
     return normalized;
   }
 
-  await collection.insertOne(normalized); //inserta el mensaje
-  return normalized;
+  const result = await collection.insertOne(normalized); //inserta el mensaje
+  return {
+    ...normalized,
+    _id: result.insertedId,
+  };
+}
+
+export async function editTicTacToe(obj) {
+  const collection = await getMessagesCollection();
+  await collection.updateOne(
+    { _id: obj.id },
+    {
+      $set: {
+        [`data.board.${obj.cell}`]: obj.player,
+      },
+    },
+  );
 }
 
 //obtiene los mensajes

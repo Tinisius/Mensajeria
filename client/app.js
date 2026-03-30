@@ -22,12 +22,13 @@ MEDIA.addEventListener("change", () => {});
 //                                                   DEFINICIONES DE FUNCIONES
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function createBoard() {
-  let squares = Array(9).fill(null);
-  let turn = "×";
+function createBoard(obj) {
+  let squares = obj.data.board; //incluso la primera vez ya es un array de null
+  let turn = obj.data.turn; //tambien la primera vex es X
 
   const $board = document.createElement("grid");
   $board.className = "board";
+  $board.id = `game-${obj._id.toString()}`;
 
   function checkWinner(s) {
     const winner_combos = [
@@ -186,9 +187,11 @@ async function renderRoom(chatId) {
   //- - - - - - - - - - - - - - Genero los listeners - - - - - - - - - - - - - -
   ticTacToe.addEventListener("click", () => {
     if (USER.name) {
-      const $board = createBoard();
-      const messagesDiv = document.getElementById(`${chatId}_messages`);
-      messagesDiv.appendChild($board);
+      socket.emit("ticTacToe", {
+        chat: chatId,
+        type: "TTT_pending",
+        user: USER.name,
+      });
     }
   });
 
@@ -237,6 +240,13 @@ function renderMessage(chat, username, msg, color, font, type = "message") {
   addFriend.addEventListener("click", async () => {
     console.log(msg);
   });
+}
+
+function renderTicTacToe(obj) {
+  const $board = createBoard(obj);
+  const messagesDiv = document.getElementById(`${obj.chat}_messages`);
+  messagesDiv.appendChild($board);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 //4.0 se encarga de mostrar un chat que ya fue cargado o reenderizar uno nuevo
@@ -399,7 +409,18 @@ socket.on("history", (historyMessages, chat) => {
   messagesDiv.innerHTML = "";
   //renderiza todos los mensajes de la DB
   historyMessages.forEach((item) => {
-    renderMessage(chat, item.user, item.text, item.color, item.font, item.type);
+    if (item.type === "message" || item.type === "join")
+      renderMessage(
+        chat,
+        item.user,
+        item.text,
+        item.color,
+        item.font,
+        item.type,
+      );
+    else {
+      renderTicTacToe(item);
+    }
   });
 });
 
@@ -409,6 +430,12 @@ socket.on("join", (chat, username, color, font) => {
 
 socket.on("message", (chat, username, msg, color, font) => {
   renderMessage(chat, username, msg, color, font);
+});
+
+socket.on("ticTacToe", (obj) => {
+  if (obj.type === "TTT_pending") {
+    renderTicTacToe(obj);
+  }
 });
 
 socket.on("disconnect", () => {

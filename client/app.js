@@ -22,6 +22,57 @@ MEDIA.addEventListener("change", () => {});
 //                                                   DEFINICIONES DE FUNCIONES
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+function createBoard() {
+  let squares = Array(9).fill(null);
+  let turn = "×";
+
+  const $board = document.createElement("grid");
+  $board.className = "board";
+
+  function checkWinner(s) {
+    const winner_combos = [
+      //todas las combinaciones ganadoras
+      [0, 1, 2], // filas
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6], // columnas
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8], // diagonales
+      [2, 4, 6],
+    ];
+
+    //extrae las 3 posiciones de cada combo
+    for (let [a, b, c] of winner_combos) {
+      if (s[a] && s[a] === s[b] && s[a] === s[c]) {
+        return s[a];
+      }
+    }
+    return null;
+  }
+
+  squares.forEach((value, index) => {
+    const $cell = document.createElement("div");
+    $cell.className = "cell";
+    $cell.textContent = value ? value : "";
+
+    $cell.addEventListener("click", () => {
+      if (!$cell.textContent) {
+        $cell.textContent = turn;
+        squares[index] = turn;
+        if (checkWinner(squares)) {
+          alert(`El ganador es: ${turn}`);
+        }
+        turn = turn === "×" ? "○" : "×";
+      }
+    });
+
+    $board.appendChild($cell);
+  });
+
+  return $board;
+}
+
 async function renderLogChat(chatId, username) {
   const logChatDiv = document.createElement("div");
   logChatDiv.id = chatId;
@@ -119,6 +170,12 @@ async function renderRoom(chatId) {
   messageInput.placeholder = "Escribe un mensaje...";
   inputGroup.appendChild(messageInput);
 
+  const ticTacToe = document.createElement("button");
+  ticTacToe.classList.add("ticTacToeBtn");
+  ticTacToe.classList.add("sendBtn");
+  ticTacToe.textContent = "#";
+  inputGroup.appendChild(ticTacToe);
+
   const sendBtn = document.createElement("button");
   sendBtn.className = "sendBtn";
   sendBtn.textContent = "Enviar";
@@ -127,6 +184,14 @@ async function renderRoom(chatId) {
   MAIN_DIV.appendChild(roomDiv);
 
   //- - - - - - - - - - - - - - Genero los listeners - - - - - - - - - - - - - -
+  ticTacToe.addEventListener("click", () => {
+    if (USER.name) {
+      const $board = createBoard();
+      const messagesDiv = document.getElementById(`${chatId}_messages`);
+      messagesDiv.appendChild($board);
+    }
+  });
+
   sendBtn.addEventListener("click", () => {
     const message = messageInput.value.trim();
     if (message && USER.name) {

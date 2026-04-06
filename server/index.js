@@ -3,7 +3,11 @@ import http from "http";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { getRecentMessages, saveMessage } from "./store/messages.js";
+import {
+  getRecentMessages,
+  saveMessage,
+  editTicTacToe,
+} from "./store/messages.js";
 import { saveUser } from "./store/users.js";
 import { getChats, saveChat } from "./store/chats.js";
 import {
@@ -160,13 +164,22 @@ io.on("connection", async (socket) => {
     }
   });
 
-  socket.on("ticTacToe", async (obj) => {
-    if (obj.type === "TTT_pending") {
-      obj = await saveMessage(obj); //MODIFICA EL OBJ PARA AGREGARLE EL ID
+  socket.on("ticTacToe", async (obj, callback) => {
+    if (obj.type === "create") {
+      //distinguir type del ticTacToe (create, move) del type del mensage=ticTacToe
+      const response = await saveMessage({
+        chat: obj.chat,
+        type: "ticTacToe",
+        user: obj.user,
+      }); //devuelve el mensaje guardado
+      obj._id = response._id;
+      obj.data = response.data;
       io.to(obj.chat).emit("ticTacToe", obj);
     }
-    if (obj.type === "TTT_move" || obj.type === "TTT_winner") {
-      await editTicTacToe(obj);
+    if (obj.type === "move") {
+      const response = await editTicTacToe(obj); //guarda y valida
+      if (response.ok) io.to(obj.chat).emit("ticTacToe", obj);
+      callback(response.ok);
     }
   });
 });

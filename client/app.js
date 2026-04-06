@@ -56,15 +56,44 @@ function createBoard(obj) {
     const $cell = document.createElement("div");
     $cell.className = "cell";
     $cell.textContent = value ? value : "";
-
+    /*
+const obj = {
+  chat: chatId,
+  type: "move",
+  user: USER.name,
+  _id: "asfac12311ewd2l332"
+  move:{
+    cell:3
+    player:o
+  }
+};
+*/
     $cell.addEventListener("click", () => {
       if (!$cell.textContent) {
-        $cell.textContent = turn;
-        squares[index] = turn;
-        if (checkWinner(squares)) {
-          alert(`El ganador es: ${turn}`);
-        }
-        turn = turn === "×" ? "○" : "×";
+        socket.emit(
+          "ticTacToe",
+          {
+            chat: obj.chat,
+            type: "move",
+            user: USER.name,
+            _id: obj._id,
+            move: {
+              cell: index,
+              player: turn,
+            },
+          },
+          (validation) => {
+            //jugada valida
+            if (validation) {
+              $cell.textContent = turn;
+              squares[index] = turn;
+              if (checkWinner(squares)) {
+                alert(`El ganador es: ${turn}`);
+              }
+              turn = turn === "x" ? "o" : "x";
+            }
+          },
+        );
       }
     });
 
@@ -189,7 +218,7 @@ async function renderRoom(chatId) {
     if (USER.name) {
       socket.emit("ticTacToe", {
         chat: chatId,
-        type: "TTT_pending",
+        type: "create",
         user: USER.name,
       });
     }
@@ -433,8 +462,12 @@ socket.on("message", (chat, username, msg, color, font) => {
 });
 
 socket.on("ticTacToe", (obj) => {
-  if (obj.type === "TTT_pending") {
+  console.log(obj);
+  if (obj.type === "create") {
     renderTicTacToe(obj);
+  } else if (obj.type === "move") {
+    const $board = document.getElementById(obj._id);
+    $board.children[obj.move.cell].textContent = obj.move.player;
   }
 });
 

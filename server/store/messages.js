@@ -1,6 +1,8 @@
 ///2.0 se encarga de obtener los mensajes y devolverlos al servidor y de recibir los mensajes del dervidor y guardarlos en la DB
 import { normalize } from "path";
 import { getMessagesCollection } from "../db/mongo.js";
+import { ObjectId } from "mongodb"; //para usar findOne
+import { log } from "console";
 
 const inMemoryMessages = []; //si falla la conexion con la DB, guarda los mensajes en memoria
 const MAX_MESSAGES = 100;
@@ -20,11 +22,12 @@ export async function saveMessage(message) {
     createdAt: new Date(),
   };
 
-  if (message.type === "TTT_pending") {
+  if (message.type === "ticTacToe") {
     normalized.data = {
+      state: "pending",
       users: [message.user, null],
       board: Array(9).fill(null),
-      turn: "×",
+      turn: "x",
       winner: null,
     };
   } else {
@@ -34,15 +37,15 @@ export async function saveMessage(message) {
     normalized.font = message.font;
   }
 
-  const collection = await getMessagesCollection(); //obtiene la colleccion de msg de la DB
+  const messagesCollection = await getMessagesCollection(); //obtiene la colleccion de msg de la DB
 
-  if (!collection) {
+  if (!messagesCollection) {
     inMemoryMessages.push(normalized);
     trimInMemory();
     return normalized;
   }
 
-  const result = await collection.insertOne(normalized); //inserta el mensaje
+  const result = await messagesCollection.insertOne(normalized); //inserta el mensaje
   return {
     ...normalized,
     _id: result.insertedId,
@@ -50,15 +53,37 @@ export async function saveMessage(message) {
 }
 
 export async function editTicTacToe(obj) {
-  const collection = await getMessagesCollection();
-  await collection.updateOne(
-    { _id: obj.id },
-    {
-      $set: {
-        [`data.board.${obj.cell}`]: obj.player,
+  const messagesCollection = await getMessagesCollection();
+  const game = await messagesCollection.findOne({ _id: new ObjectId(obj._id) });
+  if (game.data.users[1] === null && obj.user != game.data.users[0]) {
+    const edit = await messagesCollection.updateOne(
+      { _id: new ObjectId(obj._id) },
+      {
+        $set: {
+          [`data.board.${obj.move.cell}`]: game.data.turn,
+          "data.turn": game.data.turn === "x" ? "o" : "x",
+          ["data.users.1"]: obj.user,
+        },
       },
-    },
-  );
+    );
+    return { ok: edit.modifiedCount != 0 };
+  }
+  if (
+    (game.data.users[0] === obj.user && game.data.turn === "x") ||
+    (game.data.users[1] === obj.user && game.data.turn === "o")
+  ) {
+    const edit = await messagesCollection.updateOne(
+      { _id: new ObjectId(obj._id) },
+      {
+        $set: {
+          [`data.board.${obj.move.cell}`]: game.data.turn,
+          "data.turn": game.data.turn === "x" ? "o" : "x",
+        },
+      },
+    );
+    return { ok: edit.modifiedCount != 0 };
+  }
+  return { ok: false };
 }
 
 //obtiene los mensajes
@@ -67,14 +92,14 @@ export async function getRecentMessages(limit = 50, chat) {
     ? Math.min(Math.max(limit, 1), MAX_MESSAGES)
     : 50;
 
-  const collection = await getMessagesCollection();
+  const messagesCollection = await getMessagesCollection();
 
-  if (!collection) {
+  if (!messagesCollection) {
     return inMemoryMessages.slice(-safeLimit);
   }
 
   //devuelve la coleccion ordenada y truncada en forma de array (no filtra pero podria)
-  const docs = await collection
+  const docs = await messagesCollection
     .find({ chat: chat })
     .sort({ createdAt: -1 })
     .limit(safeLimit)

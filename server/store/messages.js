@@ -56,17 +56,22 @@ export async function editTicTacToe(obj) {
   const messagesCollection = await getMessagesCollection();
   const game = await messagesCollection.findOne({ _id: new ObjectId(obj._id) });
   if (game.data.users[1] === null && obj.user != game.data.users[0]) {
+    const newTurn = game.data.turn === "x" ? "o" : "x";
     const edit = await messagesCollection.updateOne(
       { _id: new ObjectId(obj._id) },
       {
         $set: {
           [`data.board.${obj.move.cell}`]: game.data.turn,
-          "data.turn": game.data.turn === "x" ? "o" : "x",
+          "data.turn": newTurn,
           ["data.users.1"]: obj.user,
         },
       },
     );
-    return { ok: edit.modifiedCount != 0 };
+    return {
+      ok: edit.modifiedCount != 0,
+      turn: game.data.turn,
+      players: [game.data.users[0], obj.user],
+    };
   }
   if (
     (game.data.users[0] === obj.user && game.data.turn === "x") ||
@@ -81,7 +86,11 @@ export async function editTicTacToe(obj) {
         },
       },
     );
-    return { ok: edit.modifiedCount != 0 };
+    return {
+      ok: edit.modifiedCount != 0,
+      turn: game.data.turn,
+      players: [game.data.users[0], game.data.users[1]],
+    };
   }
   return { ok: false };
 }

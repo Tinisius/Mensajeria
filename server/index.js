@@ -178,8 +178,10 @@ io.on("connection", async (socket) => {
     }
     if (obj.type === "move") {
       const response = await editTicTacToe(obj); //guarda y valida
-      if (response.ok) io.to(obj.chat).emit("ticTacToe", obj);
-      callback(response.ok);
+      if (response.ok) {
+        io.to(obj.chat).emit("ticTacToe", obj, response);
+      }
+      callback(response);
     }
   });
 });

@@ -24,9 +24,8 @@ MEDIA.addEventListener("change", () => {});
 
 function createBoard(obj) {
   let squares = obj.data.board; //incluso la primera vez ya es un array de null
-  let turn = obj.data.turn; //tambien la primera vex es X
 
-  const $board = document.createElement("grid");
+  const $board = document.createElement("div");
   $board.className = "board";
   $board.id = `game-${obj._id.toString()}`;
 
@@ -56,18 +55,7 @@ function createBoard(obj) {
     const $cell = document.createElement("div");
     $cell.className = "cell";
     $cell.textContent = value ? value : "";
-    /*
-const obj = {
-  chat: chatId,
-  type: "move",
-  user: USER.name,
-  _id: "asfac12311ewd2l332"
-  move:{
-    cell:3
-    player:o
-  }
-};
-*/
+
     $cell.addEventListener("click", () => {
       if (!$cell.textContent) {
         socket.emit(
@@ -79,18 +67,16 @@ const obj = {
             _id: obj._id,
             move: {
               cell: index,
-              player: turn,
             },
           },
           (validation) => {
             //jugada valida
-            if (validation) {
-              $cell.textContent = turn;
-              squares[index] = turn;
+            if (validation.ok) {
+              $cell.textContent = validation.turn;
+              squares[index] = validation.turn;
               if (checkWinner(squares)) {
-                alert(`El ganador es: ${turn}`);
+                alert(`El ganador es: ${validation.turn}`);
               }
-              turn = turn === "x" ? "o" : "x";
             }
           },
         );
@@ -272,9 +258,32 @@ function renderMessage(chat, username, msg, color, font, type = "message") {
 }
 
 function renderTicTacToe(obj) {
+  const container = document.createElement("div");
+  container.className = "ticTacToe-message";
+
+  //tabla
   const $board = createBoard(obj);
+  container.appendChild($board);
+
+  //panel
+  const $panel = document.createElement("div");
+  $panel.style.flexDirection = "column";
+
+  const $players = document.createElement("div");
+  $players.id = `players-${obj._id.toString()}`;
+  $players.textContent = `jugadores: ${obj.data.users[0]}, ${obj.data.users[1]}`;
+  $panel.appendChild($players);
+
+  const $turn = document.createElement("div");
+  $turn.id = `turn-${obj._id.toString()}`;
+  $turn.textContent = "turno de: x";
+  $panel.appendChild($turn);
+
+  container.appendChild($panel);
+
+  //agrega mensaje al div de mensajess
   const messagesDiv = document.getElementById(`${obj.chat}_messages`);
-  messagesDiv.appendChild($board);
+  messagesDiv.appendChild(container);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
@@ -461,13 +470,20 @@ socket.on("message", (chat, username, msg, color, font) => {
   renderMessage(chat, username, msg, color, font);
 });
 
-socket.on("ticTacToe", (obj) => {
-  console.log(obj);
+socket.on("ticTacToe", (obj, response) => {
   if (obj.type === "create") {
     renderTicTacToe(obj);
   } else if (obj.type === "move") {
-    const $board = document.getElementById(obj._id);
-    $board.children[obj.move.cell].textContent = obj.move.player;
+    const $board = document.getElementById(`game-${obj._id}`);
+    $board.children[obj.move.cell].textContent = response.turn;
+
+    if (response.players[1]) {
+      const $players = document.getElementById(`players-${obj._id}`);
+      $players.textContent = `jugadores: ${response.players[0]}, ${response.players[1]}`;
+    }
+
+    const $turn = document.getElementById(`turn-${obj._id}`);
+    $turn.textContent = `turno de: ${response.turn === "x" ? "o" : "x"}`;
   }
 });
 

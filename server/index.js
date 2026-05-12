@@ -50,9 +50,10 @@ app.get("/api/raspberry", (req, res) => {
 io.on("connection", async (socket) => {
   console.log(`usuario conectado con id: ${socket.id}`);
 
-  socket.on("raspi_conn", (data) => {
+  socket.on("raspi_conn", (cb) => {
     console.log("RASPBERRY CONNECTADA:", data.text);
     raspiSocket = socket;
+    cb("conectado");
   });
 
   socket.on("logChat", async (chatId, password, callback) => {

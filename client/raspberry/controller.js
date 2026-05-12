@@ -1,7 +1,7 @@
 const raspButton = document.getElementById("raspButton");
 
 raspButton.addEventListener("click", () => {
-  fetch("api/raspberry")
+  fetch("./api/raspberry")
     .then((r) => r.json())
     .then((data) => {
       /*

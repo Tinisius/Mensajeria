@@ -17,6 +17,7 @@ import {
   matchChatPassword,
 } from "./security/validations.js";
 import { closeMongoConnection } from "./db/mongo.js";
+import { stat } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,10 +29,31 @@ const io = new Server(server);
 
 const lastChat = new Map();
 
+let raspiSocket;
+
 app.use(express.static(join(__dirname, "../client")));
+
+app.get("/api/raspberry", (req, res) => {
+  if (raspiSocket) {
+    raspiSocket.emit("fetchResources", (data) => {
+      console.log("data:", data);
+      res.send(data);
+    });
+  } else {
+    res.send({
+      ok: false,
+      error: "raspi no conectada",
+    });
+  }
+});
 
 io.on("connection", async (socket) => {
   console.log(`usuario conectado con id: ${socket.id}`);
+
+  socket.on("raspi_conn", (data) => {
+    console.log("RASPBERRY CONNECTADA:", data.text);
+    raspiSocket = socket;
+  });
 
   socket.on("logChat", async (chatId, password, callback) => {
     callback(await matchChatPassword(chatId, password));

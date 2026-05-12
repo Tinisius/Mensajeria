@@ -16,6 +16,7 @@
   "dependencies": {
     "express": "^5.2.1",
     "http": "^0.0.1-security",
+    "io": "^1.5.8",
     "mongo": "^0.1.0",
     "mongodb": "^6.21.0",
     "mongoose": "^9.3.0",

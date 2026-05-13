@@ -12,18 +12,22 @@ function renderData(data) {
   const $body = document.querySelector("body");
 
   const $cpuEl = document.createElement("div");
-  $cpuEl.textContent = data.cpu + "%";
+  $cpuEl.id = "loginBtn";
+  $cpuEl.textContent = "CPU: " + data.cpu + "%";
   $body.appendChild($cpuEl);
 
   const $ramEl = document.createElement("div");
-  $ramEl.textContent = data.ram.usedRAMGB + "GB";
+  $ramEl.id = "loginBtn";
+  $ramEl.textContent = "RAM: " + data.ram.usedRAMGB + "GB";
   $body.appendChild($ramEl);
 
   const $tempEl = document.createElement("div");
-  $tempEl.textContent = data.temp + "°c";
+  $tempEl.id = "loginBtn";
+  $tempEl.textContent = "Temperatura: " + data.temp + "°c";
   $body.appendChild($tempEl);
 
   const $networkEl = document.createElement("div");
+  $networkEl.id = "loginBtn";
   $networkEl.textContent =
     "subida: " + data.upKBps + "KBps " + " bajada: " + data.downKBps + "KBps";
   $body.appendChild($networkEl);

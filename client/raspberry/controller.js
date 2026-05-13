@@ -35,6 +35,11 @@ raspButton.addEventListener("click", () => {
   fetch("/api/raspberry")
     .then((r) => r.json())
     .then((data) => {
+      if (data.ok === false) {
+        alert(data.error);
+        return;
+      }
       renderData(data);
+      console.log(data);
     });
 });

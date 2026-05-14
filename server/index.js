@@ -36,7 +36,6 @@ app.use(express.static(join(__dirname, "../client")));
 app.get("/api/raspberry", (req, res) => {
   if (raspiSocket) {
     raspiSocket.emit("fetchResources", (data) => {
-      console.log("data:", data);
       data.ok = true;
       res.send(data);
     });

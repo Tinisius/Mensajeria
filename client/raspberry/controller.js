@@ -1,49 +1,66 @@
-const raspButton = document.getElementById("raspButton");
-/*
-{
-    cpu: cpu.currentLoad.toFixed(1),
-    ram: { usedRAMGB, totalRAMGB },
-    temp: temp.main,
-    network: { upKBps, downKBps },
-    disks: disks,
-};
-*/
-function renderData(data) {
-  const $body = document.querySelector("body");
-
-  const $cpuEl = document.createElement("div");
-  $cpuEl.id = "loginBtn";
-  $cpuEl.textContent = "CPU: " + data.cpu + "%";
-  $body.appendChild($cpuEl);
-
-  const $ramEl = document.createElement("div");
-  $ramEl.id = "loginBtn";
-  $ramEl.textContent = "RAM: " + data.ram.usedRAMGB + "GB";
-  $body.appendChild($ramEl);
-
-  const $tempEl = document.createElement("div");
-  $tempEl.id = "loginBtn";
-  $tempEl.textContent = "Temperatura: " + data.temp + "°c";
-  $body.appendChild($tempEl);
-
-  const $networkEl = document.createElement("div");
-  $networkEl.id = "loginBtn";
-  $networkEl.textContent =
-    "subida: " + data.upKBps + "KBps " + " bajada: " + data.downKBps + "KBps";
-  $body.appendChild($networkEl);
-
-  //const disksEl = document.createElement("div");
+function createTableCell(text, className) {
+  const cell = document.createElement("td");
+  if (className) cell.className = className;
+  cell.textContent = text;
+  return cell;
 }
 
-raspButton.addEventListener("click", () => {
-  fetch("/api/raspberry")
-    .then((r) => r.json())
-    .then((data) => {
-      if (data.ok === false) {
-        alert(data.error);
-        return;
-      }
-      renderData(data);
-      console.log(data);
+function createRow(cells) {
+  const row = document.createElement("tr");
+  row.className = "disk-row";
+  cells.forEach((cell) => row.appendChild(cell));
+  return row;
+}
+
+function displayDisks(data) {
+  const body = document.getElementById("table-body");
+  if (Array.isArray(data.disks) && data.disks.length > 0) {
+    data.disks.forEach((disk) => {
+      body.appendChild(
+        createRow([
+          createTableCell(""),
+          createTableCell(disk.name),
+          createTableCell(`${disk.usedGB}GB / ${disk.sizeGB}GB`, "value-cell"),
+        ]),
+      );
     });
-});
+  } else {
+    body.appendChild(
+      createRow([
+        createTableCell("Discos"),
+        createTableCell("No hay datos de discos"),
+        createTableCell("-", "value-cell"),
+      ]),
+    );
+  }
+}
+
+const raspButton = document.getElementById("raspButton");
+
+function updateData(data) {
+  const $cpuEl = document.getElementById("cpu-value");
+  $cpuEl.textContent = data.cpu + "%";
+
+  const $ramEl = document.getElementById("ram-value");
+  const ramPorcent = (100 * data.ram.usedRAMGB) / data.ram.totalRAMGB;
+  $ramEl.textContent = `${data.ram.usedRAMGB}GB / ${data.ram.totalRAMGB}GB / ${ramPorcent.toFixed(2)}%`;
+
+  const $tempEl = document.getElementById("temp-value");
+  $tempEl.textContent = data.temp ? data.temp + "°c" : "No data";
+
+  const $netEl = document.getElementById("net-value");
+  $netEl.textContent = `${data.upKBps | 0}KBps / ${data.downKBps | 0}KBps`;
+
+  document.querySelectorAll(".disk-row").forEach((el) => el.remove()); //borra todas las filas de discos previas
+  displayDisks(data);
+}
+
+while (true) {
+  const response = await fetch("/api/raspberry");
+  const data = await response.json();
+  if (data.ok === false) {
+    alert(data.error);
+    break;
+  }
+  updateData(data);
+}

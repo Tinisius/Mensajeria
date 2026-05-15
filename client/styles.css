@@ -44,6 +44,23 @@ body {
   transform: scale(0.98);
 }
 
+.rainbow-text {
+  font-size: 48px;
+  background-image: linear-gradient(
+    to left,
+    violet,
+    indigo,
+    blue,
+    green,
+    yellow,
+    orange,
+    red
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0px;
+}
+
 #state {
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.18);

@@ -47,13 +47,36 @@ app.get("/api/raspberry", (req, res) => {
   }
 });
 
+app.get("/api/sv_state", (req, res) => {
+  if (raspiSocket) {
+    raspiSocket.emit("fetchState", (data) => {
+      res.send({ ok: true, state: data });
+    });
+  } else {
+    res.send({
+      ok: false,
+      error: "raspi no conectada",
+    });
+  }
+});
+
 io.on("connection", async (socket) => {
   console.log(`usuario conectado con id: ${socket.id}`);
 
   socket.on("raspi_conn", (cb) => {
-    console.log("RASPBERRY CONNECTADA:");
+    console.log(raspiSocket ? "RASPBERRY RECONECTADA" : "RASPBERRY CONECTADA:");
     raspiSocket = socket;
-    cb("conectado");
+    cb("estado de server actualizado");
+  });
+
+  //de la raspberry a los usuarios
+  socket.on("update_sv", (state) => {
+    io.emit("update", state);
+  });
+
+  //de los usuarios a la raspberry
+  socket.on("changeState", (newState) => {
+    raspiSocket.emit("changeState", newState);
   });
 
   socket.on("logChat", async (chatId, password, callback) => {

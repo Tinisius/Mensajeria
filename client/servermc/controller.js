@@ -53,21 +53,28 @@ function changeState(state) {
           ? "grey"
           : "yellow";
 }
+function changeData(data) {
+  const $dataEl = document.getElementById("sv_data");
+  $dataEl.textContent = data;
+}
 
 //recupera el estado actual ser servidor (estado on/of, players, etc)
 const response = await fetch("/api/sv_data");
 const data = await response.json();
 currentData = data.sv_data;
+console.log(data.sv_data);
 if (data.ok === false) {
   alert("error al obtener infomacion");
   changeState("error");
 } else {
+  changeData(data.sv_data);
   changeState(data.sv_data.state);
 }
 
 //se actualiza si el server cambia de estado
 socket.on("update_sv_data", (sv_data) => {
   console.log(sv_data);
+  changeData(sv_data);
   currentData = data.sv_data;
   if (sv_data.state !== currentData.state) {
     changeState(sv_data.state);

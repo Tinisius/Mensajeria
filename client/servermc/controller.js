@@ -55,7 +55,7 @@ function changeState(state) {
 }
 function changeData(data) {
   const $dataEl = document.getElementById("sv_data");
-  $dataEl.textContent = data;
+  $dataEl.textContent = `Estado: ${data.state}\n Jugadores: ${data.players}`;
 }
 
 //recupera el estado actual ser servidor (estado on/of, players, etc)

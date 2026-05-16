@@ -68,10 +68,10 @@ if (data.ok === false) {
 //se actualiza si el server cambia de estado
 socket.on("update_sv_data", (sv_data) => {
   console.log(sv_data);
+  currentData = data.sv_data;
   if (sv_data.state !== currentData.state) {
     changeState(sv_data.state);
   }
-  currentData.startedAt = sv_data.data.startedAt;
 });
 
 const $manageBtn = document.getElementById("manage_sv");

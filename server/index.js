@@ -47,10 +47,10 @@ app.get("/api/raspberry", (req, res) => {
   }
 });
 
-app.get("/api/sv_state", (req, res) => {
+app.get("/api/sv_data", (req, res) => {
   if (raspiSocket) {
-    raspiSocket.emit("fetchState", (data) => {
-      res.send({ ok: true, state: data });
+    raspiSocket.emit("fetchData", (sv_data) => {
+      res.send({ ok: true, sv_data });
     });
   } else {
     res.send({
@@ -70,8 +70,8 @@ io.on("connection", async (socket) => {
   });
 
   //de la raspberry a los usuarios
-  socket.on("update_sv", (state) => {
-    io.emit("update", state);
+  socket.on("update_sv_data", (sv_data) => {
+    io.emit("update_sv_data", sv_data);
   });
 
   //de los usuarios a la raspberry

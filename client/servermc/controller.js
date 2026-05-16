@@ -1,6 +1,10 @@
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
 
-let currentState;
+let currentData = {
+  state: null,
+  players: [],
+  startedAt: null,
+};
 
 const socket = io();
 socket.on("connect", () => {
@@ -8,7 +12,7 @@ socket.on("connect", () => {
 });
 
 function changeState(state) {
-  currentState = state;
+  currentData.state = state;
 
   const $button = document.getElementById("manage_sv");
   const $stateEl = document.getElementById("state");
@@ -50,24 +54,29 @@ function changeState(state) {
           : "yellow";
 }
 
-//recupera el estado actual
-const response = await fetch("/api/sv_state");
+//recupera el estado actual ser servidor (estado on/of, players, etc)
+const response = await fetch("/api/sv_data");
 const data = await response.json();
+currentData = data.sv_data;
 if (data.ok === false) {
   alert("error al obtener infomacion");
   changeState("error");
 } else {
-  changeState(data.state);
+  changeState(data.sv_data.state);
 }
 
 //se actualiza si el server cambia de estado
-socket.on("update", (state) => {
-  changeState(state);
+socket.on("update_sv_data", (sv_data) => {
+  if (sv_data.state !== currentData.state) {
+    changeState(sv_data.state);
+  }
+  currentData.startedAt = sv_data.data.startedAt;
 });
 
 const $manageBtn = document.getElementById("manage_sv");
 $manageBtn.addEventListener("click", () => {
-  if (currentState === "starting" || currentState === "stoping") return;
-  const newState = currentState === "off" ? "started" : "off";
+  if (currentData.state === "starting" || currentData.state === "stoping")
+    return;
+  const newState = currentData.state === "off" ? "started" : "off";
   socket.emit("changeState", newState);
 });

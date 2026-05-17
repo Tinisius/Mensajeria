@@ -1,15 +1,34 @@
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
+import { sleep, timeFormat } from "../utils";
 
 let currentData = {
   state: null,
   players: [],
   startedAt: null,
+  timeOut: 0,
 };
 
 const socket = io();
 socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
+
+async function startTimeout(time) {
+  if (changeData.state !== "started") return;
+
+  const $stateContainerEl = document.getElementById("state-container");
+  const $timeOut = document.createElement("div");
+  $timeOut.id = "timeOut";
+  $timeOut.style.color = "orange";
+  $stateContainerEl.appendChild($timeOut);
+
+  currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
+  while (currentData.timeOut > 0 && currentData.players.length === 0) {
+    $timeOut.textContent = timeFormat(currentData.timeOut);
+    currentData.timeOut--;
+    await sleep(1);
+  }
+}
 
 function changeState(state) {
   currentData.state = state;
@@ -56,20 +75,25 @@ function changeState(state) {
 function changeData(data) {
   const $dataEl = document.getElementById("sv_data");
   $dataEl.textContent = `Jugadores: ${data.players}`;
+
+  if (currentData.timeOut === 0 && data.timeOut > 0) {
+    //si currentTimeOut === 0 no hay timers por ahi prendidos
+    currentData = data;
+    startTimeout(data.timeOut);
+  } else {
+    currentData = data;
+  }
 }
 
 //recupera el estado actual ser servidor (estado on/of, players, etc)
 const response = await fetch("/api/sv_data");
 const data = await response.json();
-currentData = data.sv_data;
 console.log(data.sv_data);
 if (data.ok === false) {
   alert("error al obtener infomacion");
-  changeState("error");
-} else {
-  changeData(data.sv_data);
-  changeState(data.sv_data.state);
 }
+changeData(data.sv_data);
+changeState(data.sv_data.state);
 
 //se actualiza si el server cambia de estado
 socket.on("update_sv_data", (sv_data) => {

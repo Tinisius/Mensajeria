@@ -60,6 +60,11 @@ body {
   -webkit-text-fill-color: transparent;
   padding-bottom: 0px;
 }
+#state-container {
+  display: flex;
+  flex-direction: row;
+  padding-top: 40px;
+}
 
 #state {
   background: rgba(255, 255, 255, 0.12);

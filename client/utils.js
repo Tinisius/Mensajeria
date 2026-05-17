@@ -53,3 +53,14 @@ export function showAlert(msg, ms = 4000) {
     setTimeout(() => div.remove(), 200);
   }, ms);
 }
+export function sleep(sec) {
+  return new Promise((resolve) => setTimeout(resolve, sec * 1000));
+}
+
+export function timeFormat(sec) {
+  const hours = Math.trunc(sec / 3600);
+  const minutes = Math.trunc((sec % 3600) / 60);
+
+  const format = `${hours > 0 ? hours + "h " : ""} + ${minutes > 0 ? minutes + "m " : ""} + ${(sec % 60) + "s"}`;
+  return format;
+}

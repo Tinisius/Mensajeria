@@ -13,8 +13,9 @@ socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
 
-async function startTimeout(time) {
-  if (changeData.state !== "started") return;
+async function startIdleTimeout(time) {
+  console.log("inicion un timeOut en:", time);
+  if (currentData.state !== "started") return;
 
   const $stateContainerEl = document.getElementById("state-container");
   const $timeOut = document.createElement("div");
@@ -79,7 +80,7 @@ function changeData(data) {
   if (currentData.timeOut === 0 && data.timeOut > 0) {
     //si currentTimeOut === 0 no hay timers por ahi prendidos
     currentData = data;
-    startTimeout(data.timeOut);
+    startIdleTimeout(data.timeOut);
   } else {
     currentData = data;
   }

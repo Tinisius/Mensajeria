@@ -86,7 +86,7 @@ function changeData(data) {
   if (currentData.timeOut === 0 && data.timeOut > 0) {
     //si currentTimeOut === 0 no hay timers por ahi prendidos
     currentData = data;
-    startTimeout(data.timeOut);
+    startIdleTimeout(data.timeOut);
   } else {
     currentData = data;
   }

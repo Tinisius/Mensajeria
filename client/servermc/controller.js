@@ -29,7 +29,6 @@ async function startIdleTimeout(time) {
     currentData.players.length === 0 &&
     currentData.state === "started"
   ) {
-    console.log(currentData);
     $timeOut.textContent = timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);
@@ -83,6 +82,10 @@ function changeState(state) {
 function changeData(data) {
   const $dataEl = document.getElementById("sv_data");
   $dataEl.textContent = `Jugadores: ${data.players}`;
+
+  console.log("en el changeData:");
+  console.log("currentData:", currentData);
+  console.log("data: ", data);
 
   if (currentData.timeOut === 0 && data.timeOut > 0) {
     console.log(data.timeOut);

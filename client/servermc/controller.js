@@ -89,6 +89,7 @@ function changeData(data) {
 const response = await fetch("/api/sv_data");
 const data = await response.json();
 console.log(data.sv_data);
+console.log(data.sv_data.timeOut);
 if (data.ok === false) {
   alert("error al obtener infomacion");
 }

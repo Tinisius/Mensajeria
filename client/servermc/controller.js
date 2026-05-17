@@ -24,12 +24,17 @@ async function startIdleTimeout(time) {
   $stateContainerEl.appendChild($timeOut);
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
-  while (currentData.timeOut > 0 && currentData.players.length === 0) {
-    console.log(currentData.timeOut);
+  while (
+    currentData.timeOut > 0 &&
+    currentData.players.length === 0 &&
+    currentData.state === "started"
+  ) {
+    console.log(currentData.players.length);
     $timeOut.textContent = timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);
   }
+  $timeOut.remove();
 }
 
 function changeState(state) {
@@ -81,7 +86,7 @@ function changeData(data) {
   if (currentData.timeOut === 0 && data.timeOut > 0) {
     //si currentTimeOut === 0 no hay timers por ahi prendidos
     currentData = data;
-    startIdleTimeout(data.timeOut);
+    startTimeout(data.timeOut);
   } else {
     currentData = data;
   }

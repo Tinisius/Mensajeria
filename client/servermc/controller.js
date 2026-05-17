@@ -25,6 +25,7 @@ async function startIdleTimeout(time) {
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
   while (currentData.timeOut > 0 && currentData.players.length === 0) {
+    console.log(currentData.timeOut);
     $timeOut.textContent = timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);

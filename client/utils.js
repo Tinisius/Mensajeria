@@ -61,6 +61,6 @@ export function timeFormat(sec) {
   const hours = Math.trunc(sec / 3600);
   const minutes = Math.trunc((sec % 3600) / 60);
 
-  const format = `${hours > 0 ? hours + "h " : ""} + ${minutes > 0 ? minutes + "m " : ""} + ${(sec % 60) + "s"}`;
+  const format = `${hours > 0 ? hours + "h " : ""} ${minutes > 0 ? minutes + "m " : ""} ${(sec % 60) + "s"}`;
   return format;
 }

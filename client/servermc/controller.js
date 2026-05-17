@@ -1,5 +1,5 @@
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
-import { sleep, timeFormat } from "../utils";
+import { sleep, timeFormat } from "../utils.js";
 
 let currentData = {
   state: null,

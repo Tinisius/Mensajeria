@@ -107,10 +107,10 @@ changeState(data.sv_data.state);
 //se actualiza si el server cambia de estado
 socket.on("update_sv_data", (sv_data) => {
   console.log(sv_data);
-  changeData(sv_data);
   if (sv_data.state !== currentData.state) {
     changeState(sv_data.state);
   }
+  changeData(sv_data);
 });
 
 const $manageBtn = document.getElementById("manage_sv");

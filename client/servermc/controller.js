@@ -29,11 +29,12 @@ async function startIdleTimeout(time) {
     currentData.players.length === 0 &&
     currentData.state === "started"
   ) {
-    console.log(currentData.players.length);
+    console.log(currentData);
     $timeOut.textContent = timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);
   }
+  currentData.timeOut = 0;
   $timeOut.remove();
 }
 
@@ -84,6 +85,7 @@ function changeData(data) {
   $dataEl.textContent = `Jugadores: ${data.players}`;
 
   if (currentData.timeOut === 0 && data.timeOut > 0) {
+    console.log(data.timeOut);
     //si currentTimeOut === 0 no hay timers por ahi prendidos
     currentData = data;
     startIdleTimeout(data.timeOut);
@@ -106,7 +108,6 @@ changeState(data.sv_data.state);
 socket.on("update_sv_data", (sv_data) => {
   console.log(sv_data);
   changeData(sv_data);
-  currentData = data.sv_data;
   if (sv_data.state !== currentData.state) {
     changeState(sv_data.state);
   }

@@ -32,11 +32,6 @@ async function startIdleTimeout(time) {
     $timeOut.textContent = "AutoApagado en: " + timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);
-
-    console.log("timeout: ", currentData.timeOut);
-    console.log("$timeOut: ", $timeOut);
-    console.log("$timeOut.textContent: ", $timeOut.textContent);
-    console.log("$manageButton", $manageButton);
   }
   currentData.timeOut = 0;
   $timeOut.remove();
@@ -96,30 +91,48 @@ function changeData(data) {
     currentData = data;
   }
 }
-
-//recupera el estado actual ser servidor (estado on/of, players, etc)
-const response = await fetch("/api/sv_data");
-const data = await response.json();
-console.log(data.sv_data);
-if (data.ok === false) {
-  alert("error al obtener infomacion");
-}
-changeData(data.sv_data);
-changeState(data.sv_data.state);
-
-//se actualiza si el server cambia de estado
-socket.on("update_sv_data", (sv_data) => {
-  console.log(sv_data);
-  if (sv_data.state !== currentData.state) {
-    changeState(sv_data.state);
+// Espera al DOM y luego inicializa la parte dependiente del DOM
+async function domReady() {
+  if (document.readyState === "loading") {
+    await new Promise((resolve) =>
+      document.addEventListener("DOMContentLoaded", resolve, { once: true }),
+    );
   }
-  changeData(sv_data);
-});
+}
 
-const $manageBtn = document.getElementById("manage_sv");
-$manageBtn.addEventListener("click", () => {
-  if (currentData.state === "starting" || currentData.state === "stoping")
-    return;
-  const newState = currentData.state === "off" ? "started" : "off";
-  socket.emit("changeState", newState);
-});
+async function init() {
+  await domReady();
+
+  //recupera el estado actual ser servidor (estado on/of, players, etc)
+  const response = await fetch("/api/sv_data");
+  const data = await response.json();
+  console.log(data.sv_data);
+  if (data.ok === false) {
+    alert("error al obtener infomacion");
+  }
+  changeData(data.sv_data);
+  changeState(data.sv_data.state);
+
+  //se actualiza si el server cambia de estado
+  const socket = io();
+  socket.on("connect", () => {
+    console.log("Conectado al servidor");
+  });
+  socket.on("update_sv_data", (sv_data) => {
+    console.log(sv_data);
+    if (sv_data.state !== currentData.state) {
+      changeState(sv_data.state);
+    }
+    changeData(sv_data);
+  });
+
+  const $manageBtn = document.getElementById("manage_sv");
+  $manageBtn.addEventListener("click", () => {
+    if (currentData.state === "starting" || currentData.state === "stoping")
+      return;
+    const newState = currentData.state === "off" ? "started" : "off";
+    socket.emit("changeState", newState);
+  });
+}
+
+init();

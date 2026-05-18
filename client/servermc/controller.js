@@ -36,6 +36,7 @@ async function startIdleTimeout(time) {
     console.log("timeout: ", currentData.timeOut);
     console.log("$timeOut: ", $timeOut);
     console.log("$timeOut.textContent: ", $timeOut.textContent);
+    console.log("$manageButton", $manageButton);
   }
   currentData.timeOut = 0;
   $timeOut.remove();

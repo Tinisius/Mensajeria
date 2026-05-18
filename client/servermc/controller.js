@@ -32,7 +32,7 @@ async function startIdleTimeout(time) {
     $timeOut.textContent = "AutoApagado en: " + timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);
-    $manageButton.appendChild($timeOut);
+    $timeOut.offsetHeight;
   }
   currentData.timeOut = 0;
   $timeOut.remove();

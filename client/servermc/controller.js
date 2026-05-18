@@ -14,12 +14,12 @@ socket.on("connect", () => {
 });
 
 async function startIdleTimeout(time) {
+  console.log("aranca un timeout:", currentData.state);
   if (currentData.state !== "started") return;
 
   const $manageButton = document.getElementById("manage_sv");
   const $timeOut = document.createElement("div");
   $timeOut.id = "timeout";
-  $timeOut.style.color = "orange";
   $manageButton.appendChild($timeOut);
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable

@@ -8,43 +8,19 @@ let currentData = {
   timeOut: 0,
 };
 
-// helper: espera un elemento hasta timeout (ms)
-async function waitForElement(selector, timeout = 3000) {
-  const interval = 50;
-  const max = Math.ceil(timeout / interval);
-  let i = 0;
-  while (i++ < max) {
-    const el = document.querySelector(selector);
-    if (el) return el;
-    await new Promise((r) => setTimeout(r, interval));
-  }
-  return null;
-}
+const socket = io();
+socket.on("connect", () => {
+  console.log("Conectado al servidor");
+});
 
 async function startIdleTimeout(time) {
   console.log("aranca un timeout:", currentData.state);
   if (currentData.state !== "started") return;
 
-  // asegurar que existe el boton padre (espera un poco si es necesario)
-  const $manageButton =
-    document.getElementById("manage_sv") || (await waitForElement("#manage_sv", 2000));
-  if (!$manageButton) {
-    console.warn("manage_sv no encontrado, omitiendo timeout");
-    return;
-  }
-
-  // evitar crear duplicados si ya existe
-  let $timeOut = document.getElementById("timeout");
-  if (!$timeOut) {
-    $timeOut = document.createElement("div");
-    $timeOut.id = "timeout";
-    try {
-      $manageButton.appendChild($timeOut);
-    } catch (err) {
-      console.error("appendChild falló para #manage_sv:", err, $manageButton);
-      return;
-    }
-  }
+  const $manageButton = document.getElementById("manage_sv");
+  const $timeOut = document.createElement("div");
+  $timeOut.id = "timeout";
+  $manageButton.appendChild($timeOut);
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
 
@@ -56,6 +32,7 @@ async function startIdleTimeout(time) {
     $timeOut.textContent = "AutoApagado en: " + timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);
+    $manageButton.appendChild($timeOut);
   }
   currentData.timeOut = 0;
   $timeOut.remove();
@@ -150,16 +127,13 @@ async function init() {
     changeData(sv_data);
   });
 
-  const $manageBtn = document.getElementById("manage_sv") || (await waitForElement("#manage_sv", 2000));
-  if ($manageBtn) {
-    $manageBtn.addEventListener("click", () => {
-      if (currentData.state === "starting" || currentData.state === "stoping") return;
-      const newState = currentData.state === "off" ? "started" : "off";
-      socket.emit("changeState", newState);
-    });
-  } else {
-    console.warn("manage_sv no encontrado para registrar click");
-  }
+  const $manageBtn = document.getElementById("manage_sv");
+  $manageBtn.addEventListener("click", () => {
+    if (currentData.state === "starting" || currentData.state === "stoping")
+      return;
+    const newState = currentData.state === "off" ? "started" : "off";
+    socket.emit("changeState", newState);
+  });
 }
 
 init();

@@ -14,14 +14,13 @@ socket.on("connect", () => {
 });
 
 async function startIdleTimeout(time) {
-  console.log("inicion un timeOut en:", time);
   if (currentData.state !== "started") return;
 
-  const $stateContainerEl = document.getElementById("state-container");
+  const $manageButton = document.getElementById("manage_sv");
   const $timeOut = document.createElement("div");
-  $timeOut.id = "timeOut";
+  $timeOut.id = "timeout";
   $timeOut.style.color = "orange";
-  $stateContainerEl.appendChild($timeOut);
+  $manageButton.appendChild($timeOut);
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
   while (
@@ -29,7 +28,7 @@ async function startIdleTimeout(time) {
     currentData.players.length === 0 &&
     currentData.state === "started"
   ) {
-    $timeOut.textContent = timeFormat(currentData.timeOut);
+    $timeOut.textContent = "AutoApagado en: " + timeFormat(currentData.timeOut);
     currentData.timeOut--;
     await sleep(1);
   }
@@ -83,12 +82,7 @@ function changeData(data) {
   const $dataEl = document.getElementById("sv_data");
   $dataEl.textContent = `Jugadores: ${data.players}`;
 
-  console.log("en el changeData:");
-  console.log("currentData:", currentData);
-  console.log("data: ", data);
-
   if (currentData.timeOut === 0 && data.timeOut > 0) {
-    console.log(data.timeOut);
     //si currentTimeOut === 0 no hay timers por ahi prendidos
     currentData = data;
     startIdleTimeout(data.timeOut);

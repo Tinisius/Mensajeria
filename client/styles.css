@@ -75,6 +75,12 @@ body {
     transform 0.08s ease;
 }
 
+#timeout {
+  font-size: 14px;
+}
+
+/*ESTO ES DE MENSAJERIA*/
+
 #main {
   width: 100vw;
   height: 95vh;

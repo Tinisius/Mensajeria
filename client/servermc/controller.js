@@ -20,7 +20,7 @@ async function startIdleTimeout(time) {
   const $manageButton = document.getElementById("manage_sv");
   const $timeOut = document.createElement("div");
   $timeOut.id = "timeout";
-  sleep(0.1);
+  await sleep(0.1);
   $manageButton.appendChild($timeOut);
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
@@ -32,7 +32,7 @@ async function startIdleTimeout(time) {
   ) {
     $timeOut.textContent = "AutoApagado en: " + timeFormat(currentData.timeOut);
     currentData.timeOut--;
-    sleep(1);
+    await sleep(1);
   }
   currentData.timeOut = 0;
   $timeOut.remove();

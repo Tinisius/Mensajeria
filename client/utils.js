@@ -54,8 +54,7 @@ export function showAlert(msg, ms = 4000) {
   }, ms);
 }
 export function sleep(sec) {
-  await new Promise((resolve) => setTimeout(resolve, sec * 1000));
-  return;
+  return new Promise((resolve) => setTimeout(resolve, sec * 1000));
 }
 
 export function timeFormat(sec) {

@@ -24,10 +24,6 @@ async function startIdleTimeout(time) {
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
 
-  console.log("currentData.timeOut > 0", currentData.timeOut > 0);
-  console.log("currentData.players.length", currentData.players.length);
-  console.log("currentData.state", currentData.state);
-
   while (
     currentData.timeOut > 0 &&
     currentData.players.length === 0 &&
@@ -38,6 +34,8 @@ async function startIdleTimeout(time) {
     await sleep(1);
 
     console.log("timeout: ", currentData.timeOut);
+    console.log("$timeOut: ", $timeOut);
+    console.log("$timeOut.textContent: ", $timeOut.textContent);
   }
   currentData.timeOut = 0;
   $timeOut.remove();

@@ -52,7 +52,7 @@ function changeState(state) {
       $button.textContent = "Prender";
       $button.style.backgroundColor = "green";
 
-      $body.style.background = "../assets/sv_night.png";
+      $body.style.backgroundImage = "../assets/sv_night.png";
       break;
     case "started":
       const startedAud = new Audio("../assets/started.mp3");
@@ -63,7 +63,7 @@ function changeState(state) {
       $button.textContent = "Apagar";
       $button.style.backgroundColor = "green";
 
-      $body.style.background = "../assets/sv_day.png";
+      $body.style.backgroundImage = "../assets/sv_day.png";
       break;
     case "starting":
       $stateEl.textContent = "Prendiendo";
@@ -71,7 +71,7 @@ function changeState(state) {
       $button.textContent = "Prendiendo";
       $button.style.backgroundColor = "grey";
 
-      $body.style.background = "../assets/sv_sunset.png";
+      $body.style.backgroundImage = "../assets/sv_sunset.png";
       break;
     case "closing":
       $stateEl.textContent = "Apagando";
@@ -79,7 +79,7 @@ function changeState(state) {
       $button.textContent = "Apagando";
       $button.style.backgroundColor = "grey";
 
-      $body.style.background = "../assets/sv_sunset.png";
+      $body.style.backgroundImage = "../assets/sv_sunset.png";
       break;
     default:
     // Code to run if no cases match
@@ -115,9 +115,10 @@ async function init() {
   console.log(data.sv_data);
   if (data.ok === false) {
     alert("error al obtener infomacion");
+  } else {
+    changeData(data.sv_data);
+    changeState(data.sv_data.state);
   }
-  changeData(data.sv_data);
-  changeState(data.sv_data.state);
 
   //se actualiza si el server cambia de estado
   const socket = io();

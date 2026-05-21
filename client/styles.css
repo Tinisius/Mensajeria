@@ -25,16 +25,12 @@ body {
   padding: 20px;
 }
 
-.server-container {
+#server-container {
   width: 100vw;
   height: 100vh;
   background: url(assets/sv_night.png) center center no-repeat;
   background-size: cover;
   transition: all 0.3s ease-in-out;
-}
-
-.server-container:hover {
-  background-image: url(assets/sv_day.png);
 }
 
 .stockBtn {

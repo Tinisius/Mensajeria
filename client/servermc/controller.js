@@ -41,7 +41,7 @@ async function startIdleTimeout(time) {
 function changeState(state) {
   currentData.state = state;
 
-  const $body = document.querySelector("body");
+  const $serverContainer = document.querySelector("server-container");
   const $button = document.getElementById("manage_sv");
   const $stateEl = document.getElementById("state");
 
@@ -52,7 +52,7 @@ function changeState(state) {
       $button.textContent = "Prender";
       $button.style.backgroundColor = "green";
 
-      $body.style.backgroundImage = "../assets/sv_night.png";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_night.png)";
       break;
     case "started":
       const startedAud = new Audio("../assets/started.mp3");
@@ -63,7 +63,7 @@ function changeState(state) {
       $button.textContent = "Apagar";
       $button.style.backgroundColor = "green";
 
-      $body.style.backgroundImage = "../assets/sv_day.png";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_day.png)";
       break;
     case "starting":
       $stateEl.textContent = "Prendiendo";
@@ -71,7 +71,7 @@ function changeState(state) {
       $button.textContent = "Prendiendo";
       $button.style.backgroundColor = "grey";
 
-      $body.style.backgroundImage = "../assets/sv_sunset.png";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.png)";
       break;
     case "closing":
       $stateEl.textContent = "Apagando";
@@ -79,7 +79,7 @@ function changeState(state) {
       $button.textContent = "Apagando";
       $button.style.backgroundColor = "grey";
 
-      $body.style.backgroundImage = "../assets/sv_sunset.png";
+      $body.style.backgroundImage = "url(../assets/sv_sunset.png)";
       break;
     default:
     // Code to run if no cases match

@@ -39,51 +39,51 @@ async function startIdleTimeout(time) {
 }
 
 function changeState(state) {
-  if (state === "started") {
-    const startedAud = new Audio("../assets/started.mp3");
-    startedAud.play();
-  }
-
   currentData.state = state;
 
+  const $body = document.querySelector("body");
   const $button = document.getElementById("manage_sv");
   const $stateEl = document.getElementById("state");
-  $stateEl.textContent =
-    state === "off"
-      ? "Apagado"
-      : state === "started"
-        ? "Prendido"
-        : state === "starting"
-          ? "Prendiendo"
-          : state === "closing"
-            ? "Apagando"
-            : "Error";
-  $stateEl.style.color =
-    state === "off"
-      ? "red"
-      : state === "started"
-        ? "green"
-        : state === "starting" || state === "closing"
-          ? "grey"
-          : "yellow";
-  $button.textContent =
-    state === "off"
-      ? "Prender"
-      : state === "started"
-        ? "Apagar"
-        : state === "starting"
-          ? "Prendiendo"
-          : state === "closing"
-            ? "Apagando"
-            : "Error";
-  $button.style.backgroundColor =
-    state === "off"
-      ? "green"
-      : state === "started"
-        ? "red"
-        : state === "starting" || state === "closing"
-          ? "grey"
-          : "yellow";
+
+  switch (state) {
+    case "off":
+      $stateEl.textContent = "Apagado";
+      $stateEl.style.color = "red";
+      $button.textContent = "Prender";
+      $button.style.backgroundColor = "green";
+
+      $body.style.background = "../assets/sv_night.png";
+      break;
+    case "started":
+      const startedAud = new Audio("../assets/started.mp3");
+      startedAud.play();
+
+      $stateEl.textContent = "Prendido";
+      $stateEl.style.color = "red";
+      $button.textContent = "Apagar";
+      $button.style.backgroundColor = "green";
+
+      $body.style.background = "../assets/sv_day.png";
+      break;
+    case "starting":
+      $stateEl.textContent = "Prendiendo";
+      $stateEl.style.color = "grey";
+      $button.textContent = "Prendiendo";
+      $button.style.backgroundColor = "grey";
+
+      $body.style.background = "../assets/sv_sunset.png";
+      break;
+    case "closing":
+      $stateEl.textContent = "Apagando";
+      $stateEl.style.color = "grey";
+      $button.textContent = "Apagando";
+      $button.style.backgroundColor = "grey";
+
+      $body.style.background = "../assets/sv_sunset.png";
+      break;
+    default:
+    // Code to run if no cases match
+  }
 }
 function changeData(data) {
   const $dataEl = document.getElementById("sv_data");

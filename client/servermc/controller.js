@@ -39,8 +39,10 @@ async function startIdleTimeout(time) {
 }
 
 function changeState(state) {
-  const startedAud = new Audio("../assets/started.mp3");
-  startedAud.play();
+  if (state === "started") {
+    const startedAud = new Audio("../assets/started.mp3");
+    startedAud.play();
+  }
 
   currentData.state = state;
 

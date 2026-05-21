@@ -41,7 +41,7 @@ async function startIdleTimeout(time) {
 function changeState(state) {
   currentData.state = state;
 
-  const $serverContainer = document.querySelector("server-container");
+  const $serverContainer = document.getElementById("server-container");
   const $button = document.getElementById("manage_sv");
   const $stateEl = document.getElementById("state");
 

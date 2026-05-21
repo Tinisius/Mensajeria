@@ -59,9 +59,9 @@ function changeState(state) {
       startedAud.play();
 
       $stateEl.textContent = "Prendido";
-      $stateEl.style.color = "red";
+      $stateEl.style.color = "green";
       $button.textContent = "Apagar";
-      $button.style.backgroundColor = "green";
+      $button.style.backgroundColor = "red";
 
       $serverContainer.style.backgroundImage = "url(../assets/sv_day.png)";
       break;

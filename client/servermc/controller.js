@@ -79,7 +79,7 @@ function changeState(state) {
       $button.textContent = "Apagando";
       $button.style.backgroundColor = "grey";
 
-      $body.style.backgroundImage = "url(../assets/sv_sunset.png)";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.png)";
       break;
     default:
     // Code to run if no cases match

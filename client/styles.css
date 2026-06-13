@@ -1,3 +1,4 @@
+/*-------------------------GENERAL-------------------------*/
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -23,14 +24,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: 20px;
-}
-
-#server-container {
-  width: 100vw;
-  height: 100vh;
-  background: url(assets/sv_night.png) center center no-repeat;
-  background-size: cover;
-  transition: all 0.3s ease-in-out;
 }
 
 .stockBtn {
@@ -95,6 +88,46 @@ body {
   padding-bottom: 0px;
 }
 
+/*-------------------------DE LA MAIN PAGE-------------------------*/
+
+.mainBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.stockAnchor {
+  text-decoration: none;
+}
+
+/*-------------------------DEL SERVER MC-------------------------*/
+
+#server-bg {
+  background: url(assets/sv_night.png) center center no-repeat;
+  background-size: cover;
+  transition: all 0.3s ease-in-out;
+}
+
+#sv_page_wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1100px;
+  padding: 20px;
+}
+
+#main_sv_container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+}
+
 #state-container {
   display: flex;
   flex-direction: row;
@@ -115,7 +148,42 @@ body {
   color: #ffb9a0;
 }
 
-/*ESTO ES DE MENSAJERIA*/
+#sv_data {
+  width: 260px;
+  min-width: 240px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#sv_data h2 {
+  margin-bottom: 16px;
+  font-size: 22px;
+  text-align: left;
+}
+
+#sv_data ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 0;
+}
+
+#sv_data li {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #fff;
+}
+
+/*-------------------------DE MENSAJERIA-------------------------*/
 
 #main {
   width: 100vw;
@@ -271,7 +339,6 @@ h1 {
   font-size: 48px;
 }
 
-/* COPILOT -------------------------------------------------*/
 .ticTacToe-message {
   min-height: 300px; /* triple de un mensaje normal aproximado */
   display: flex;
@@ -293,7 +360,6 @@ h1 {
   width: 250px;
   margin: 0;
 }
-/* ------------------------------------------------------ */
 
 .sendBtn:hover {
   background: #764ba2;
@@ -302,8 +368,6 @@ h1 {
 .sendBtn:active {
   transform: scale(0.98);
 }
-
-/**/
 
 #loginTitle {
   font-size: 2rem;
@@ -314,59 +378,6 @@ h1 {
 #colorPicker {
   aspect-ratio: 3 / 2;
   height: auto;
-}
-
-/* Raspberry stats table */
-#stats {
-  width: min(100%, 760px);
-  margin-top: 24px;
-}
-
-.system-stats-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-}
-
-.system-stats-table th,
-.system-stats-table td {
-  padding: 14px 16px;
-  text-align: left;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  font-size: 0.95rem;
-  color: #2b2b3d;
-}
-
-.system-stats-table th {
-  background: #5f6fd1;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.8rem;
-}
-
-.system-stats-table tr:last-child td {
-  border-bottom: none;
-}
-
-.system-stats-table .value-cell {
-  font-weight: 700;
-}
-
-.system-stats-table .section-cell {
-  background: #eef1ff;
-  font-weight: 700;
-}
-
-@media (max-width: 720px) {
-  .system-stats-table th,
-  .system-stats-table td {
-    padding: 12px 10px;
-    font-size: 0.85rem;
-  }
 }
 
 .menuInput {
@@ -421,6 +432,60 @@ h1 {
 #alternator {
   display: none;
 }
+
+/*-------------------------DEL RASPBERRY DASHBOARD-------------------------*/
+#stats {
+  width: min(100%, 760px);
+  margin-top: 24px;
+}
+
+.system-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+}
+
+.system-stats-table th,
+.system-stats-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.95rem;
+  color: #2b2b3d;
+}
+
+.system-stats-table th {
+  background: #5f6fd1;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+}
+
+.system-stats-table tr:last-child td {
+  border-bottom: none;
+}
+
+.system-stats-table .value-cell {
+  font-weight: 700;
+}
+
+.system-stats-table .section-cell {
+  background: #eef1ff;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .system-stats-table th,
+  .system-stats-table td {
+    padding: 12px 10px;
+    font-size: 0.85rem;
+  }
+}
+
 /*para celular*/
 @media (max-width: 768px) {
   #main {

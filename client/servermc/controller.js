@@ -1,5 +1,5 @@
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
-import { sleep, timeFormat } from "../utils.js";
+import { sleep, timeFormat, showAlert } from "../utils.js";
 
 let currentData = {
   state: null,
@@ -86,8 +86,15 @@ function changeState(state) {
   }
 }
 function changeData(data) {
-  const $dataEl = document.getElementById("sv_data");
-  $dataEl.textContent = `Jugadores: ${data.players}`;
+  const $playersList = document.getElementById("player_list");
+  if (data.players) {
+    $playersList.innerHTML = "";
+    data.players.forEach((player) => {
+      const $playerEl = document.createElement("li");
+      $playerEl.textContent = player;
+      $playersList.appendChild($playerEl);
+    });
+  }
 
   if (currentData.timeOut === 0 && data.timeOut > 0) {
     //si currentTimeOut === 0 no hay timers por ahi prendidos
@@ -114,7 +121,7 @@ async function init() {
   const data = await response.json();
   console.log(data.sv_data);
   if (data.ok === false) {
-    alert("error al obtener infomacion");
+    showAlert("error al obtener infomacion");
   } else {
     changeData(data.sv_data);
     changeState(data.sv_data.state);

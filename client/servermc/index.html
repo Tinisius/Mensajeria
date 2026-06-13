@@ -6,34 +6,40 @@
     <title>SERVER</title>
     <link rel="stylesheet" href="../styles.css" />
     <link rel="icon" href="../assets/mc-server.ico" type="image/x-icon" />
-    <link rel="preload" as="image" href="../assets/sv_night.png" />
-    <link rel="preload" as="image" href="../assets/sv_day.png" />
-    <link rel="preload" as="image" href="../assets/sv_sunset.png" />
   </head>
-  <body style="display: flex; flex-direction: column" id="server-container">
-    <h1 class="rainbow-text">IP: waffle-job.gl.joinmc.link</h1>
-    <h1 class="rainbow-text" style="font-size: 36px">Laucher: NeoForge</h1>
-    <h1 class="rainbow-text" style="font-size: 36px">Version: 1.21.1</h1>
-    <a
-      href="https://drive.google.com/file/d/1Wd1LhvZLBO481OZQNUntqLJNSXYo_Lrr/view?usp=drive_link"
-      style="text-decoration: none"
-      target="_blank"
-    >
-      <h1 class="rainbow-text" style="font-size: 36px">Descargar Mods</h1>
-    </a>
+  <body id="server-bg">
+    <div id="sv_page_wrapper">
+      <aside id="sv_data">
+        <h2>Jugadores:</h2>
+        <ul id="player_list">
+          <li>Cargando...</li>
+        </ul>
+      </aside>
+      <div id="main_sv_container">
+        <h1 class="cold-text">IP: waffle-job.gl.joinmc.link</h1>
+        <h1 class="cold-text" style="font-size: 36px">Laucher: NeoForge</h1>
+        <h1 class="cold-text" style="font-size: 36px">Version: 1.21.1</h1>
+        <a
+          href="https://drive.google.com/file/d/1Wd1LhvZLBO481OZQNUntqLJNSXYo_Lrr/view?usp=drive_link"
+          style="text-decoration: none"
+          target="_blank"
+        >
+          <h1 class="cold-text" style="font-size: 36px">Descargar Mods</h1>
+        </a>
 
-    <div id="state-container">
-      <h1>Estado del server:</h1>
-      <h1 id="state">Cargando Estado...</h1>
+        <div id="state-container">
+          <h1>Estado del server:</h1>
+          <h1 id="state">Cargando Estado...</h1>
+        </div>
+        <button id="manage_sv" class="stockBtn" style="font-size: 24px">
+          Cargando Estado...
+        </button>
+
+        <a href="/">
+          <button class="stockBtn">Volver</button>
+        </a>
+      </div>
     </div>
-    <button id="manage_sv" class="stockBtn" style="font-size: 24px">
-      Cargando Estado...
-    </button>
-    <h2 id="sv_data">Cargando Datos...</h2>
-
-    <a href="/">
-      <button class="stockBtn">Volver</button>
-    </a>
   </body>
   <script type="module" src="controller.js"></script>
 </html>

@@ -51,6 +51,10 @@ body {
 .stockBtn:active {
   transform: scale(0.98);
 }
+.stockBtn a {
+  text-decoration: none;
+  color: #ffb8f6;
+}
 
 .rainbow-text {
   font-size: 48px;
@@ -68,6 +72,29 @@ body {
   -webkit-text-fill-color: transparent;
   padding-bottom: 0px;
 }
+
+.warm-text {
+  font-size: 48px;
+  background-image: linear-gradient(to left, yellow, orange, red);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0px;
+}
+
+.cold-text {
+  font-size: 48px;
+  background-image: linear-gradient(
+    to left,
+    rgb(208, 255, 208),
+    rgb(126, 208, 255),
+    rgb(0, 145, 255),
+    blue
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0px;
+}
+
 #state-container {
   display: flex;
   flex-direction: row;

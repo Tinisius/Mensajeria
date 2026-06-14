@@ -38,6 +38,20 @@ async function startIdleTimeout(time) {
   $timeOut.remove();
 }
 
+function changeColor(color) {
+  colorElements = document.querySelectorAll(".color-text");
+  colorElements.forEach(($element) => {
+    $element.classList.remove("warm-text", "cold-text");
+    if (color === "warm") {
+      $element.classList.add("warm-text");
+    } else if (color === "cold") {
+      $element.classList.add("cold-text");
+    } else {
+      $element.classList.add("rainbow-text");
+    }
+  });
+}
+
 function changeState(state) {
   currentData.state = state;
 
@@ -53,6 +67,8 @@ function changeState(state) {
       $button.style.backgroundColor = "green";
 
       $serverContainer.style.backgroundImage = "url(../assets/sv_night.png)";
+
+      changeColor("warm");
       break;
     case "started":
       const startedAud = new Audio("../assets/started.mp3");
@@ -64,6 +80,8 @@ function changeState(state) {
       $button.style.backgroundColor = "red";
 
       $serverContainer.style.backgroundImage = "url(../assets/sv_day.png)";
+
+      changeColor("cold");
       break;
     case "starting":
       $stateEl.textContent = "Prendiendo";
@@ -72,6 +90,8 @@ function changeState(state) {
       $button.style.backgroundColor = "grey";
 
       $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.png)";
+
+      changeColor("cold");
       break;
     case "closing":
       $stateEl.textContent = "Apagando";
@@ -80,6 +100,8 @@ function changeState(state) {
       $button.style.backgroundColor = "grey";
 
       $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.png)";
+
+      changeColor("warm");
       break;
     default:
     // Code to run if no cases match

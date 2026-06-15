@@ -39,7 +39,7 @@ async function startIdleTimeout(time) {
 }
 
 function changeColor(color) {
-  colorElements = document.querySelectorAll(".color-text");
+  const colorElements = document.querySelectorAll(".color-text");
   colorElements.forEach(($element) => {
     $element.classList.remove("warm-text", "cold-text");
     if (color === "warm") {

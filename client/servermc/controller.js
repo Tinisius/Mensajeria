@@ -150,10 +150,6 @@ async function init() {
   }
 
   //se actualiza si el server cambia de estado
-  const socket = io();
-  socket.on("connect", () => {
-    console.log("Conectado al servidor");
-  });
   socket.on("update_sv_data", (sv_data) => {
     console.log(sv_data);
     if (sv_data.state !== currentData.state) {

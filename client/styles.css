@@ -194,6 +194,11 @@ body {
     flex-direction: column;
   }
 
+  .sv_text {
+    white-space: nowrap;
+    font-size: 5vw;
+  }
+
   #main_sv_container {
     width: 90vw;
     order: 1; /* Pone el main al principio (izquierda) */

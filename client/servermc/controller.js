@@ -23,7 +23,6 @@ socket.on("connect", () => {
 });
 
 async function startIdleTimeout(time) {
-  console.log("aranca un timeout:", currentData.state);
   if (currentData.state !== "started") return;
 
   const $manageButton = document.getElementById("manage_sv");
@@ -150,7 +149,6 @@ async function init() {
   //recupera el estado actual ser servidor (estado on/of, players, etc)
   const response = await fetch("/api/sv_data");
   const data = await response.json();
-  console.log(data.sv_data);
   if (data.ok === false) {
     showAlert("error al obtener infomacion");
   } else {
@@ -160,7 +158,6 @@ async function init() {
 
   //se actualiza si el server cambia de estado
   socket.on("update_sv_data", (sv_data) => {
-    console.log(sv_data);
     if (sv_data.state !== currentData.state) {
       changeState(sv_data.state);
     }

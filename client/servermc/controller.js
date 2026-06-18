@@ -115,7 +115,7 @@ function changeState(state) {
     // Code to run if no cases match
   }
   const $stateTextEl = document.getElementById("state_text");
-  $stateTextEl.textContent = $stateEl.textContent;
+  $stateTextEl.style.color = $stateEl.style.color;
 }
 function changeData(data) {
   const $playersList = document.getElementById("player_list");

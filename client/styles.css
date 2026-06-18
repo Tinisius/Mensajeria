@@ -144,6 +144,10 @@ body {
   color: yellow;
 }
 
+#state_text {
+  color: yellow;
+}
+
 #timeout {
   font-size: 14px;
   color: #ffb9a0;

@@ -64,7 +64,6 @@ io.on("connection", async (socket) => {
   console.log(`usuario conectado con id: ${socket.id}`);
 
   socket.on("raspi_conn", (cb) => {
-    console.log(raspiSocket ? "RASPBERRY RECONECTADA" : "RASPBERRY CONECTADA:");
     raspiSocket = socket;
     cb("estado de server actualizado");
   });

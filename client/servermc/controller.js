@@ -114,6 +114,8 @@ function changeState(state) {
     default:
     // Code to run if no cases match
   }
+  const $stateTextEl = document.getElementById("$state_text");
+  $stateTextEl.textContent = $stateEl.textContent;
 }
 function changeData(data) {
   const $playersList = document.getElementById("player_list");

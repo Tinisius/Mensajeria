@@ -8,6 +8,15 @@ let currentData = {
   timeOut: 0,
 };
 
+[
+  "../assets/sv_day.webp",
+  "../assets/sv_night.webp",
+  "../assets/sv_sunset.webp",
+].forEach((src) => {
+  const img = new Image();
+  img.src = src;
+});
+
 const socket = io();
 socket.on("connect", () => {
   console.log("Conectado al servidor");
@@ -66,7 +75,7 @@ function changeState(state) {
       $button.textContent = "Prender";
       $button.style.backgroundColor = "green";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_night.png)";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_night.webp)";
 
       changeColor("warm");
       break;
@@ -79,7 +88,7 @@ function changeState(state) {
       $button.textContent = "Apagar";
       $button.style.backgroundColor = "red";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_day.png)";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_day.webp)";
 
       changeColor("cold");
       break;
@@ -89,7 +98,7 @@ function changeState(state) {
       $button.textContent = "Prendiendo";
       $button.style.backgroundColor = "grey";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.png)";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.webp)";
 
       changeColor("cold");
       break;
@@ -99,7 +108,7 @@ function changeState(state) {
       $button.textContent = "Apagando";
       $button.style.backgroundColor = "grey";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.png)";
+      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.webp)";
 
       changeColor("warm");
       break;

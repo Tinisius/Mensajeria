@@ -103,7 +103,7 @@ body {
 /*-------------------------DEL SERVER MC-------------------------*/
 
 #server-bg {
-  background: url(assets/sv_night.png) center center no-repeat;
+  background: url(assets/sv_night.webp) center center no-repeat;
   background-size: cover;
   transition: all 0.3s ease-in-out;
 }

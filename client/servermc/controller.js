@@ -1,5 +1,5 @@
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
-import { sleep, timeFormat, showAlert } from "../utils.js";
+import { sleep, timeFormat, showAlert, preloadImg } from "../utils.js";
 
 let currentData = {
   state: null,
@@ -7,15 +7,6 @@ let currentData = {
   startedAt: null,
   timeOut: 0,
 };
-
-[
-  "../assets/sv_day.webp",
-  "../assets/sv_night.webp",
-  "../assets/sv_sunset.webp",
-].forEach((src) => {
-  const img = new Image();
-  img.src = src;
-});
 
 const socket = io();
 socket.on("connect", () => {
@@ -146,6 +137,7 @@ async function domReady() {
 }
 
 async function init() {
+  preloadImg();
   await domReady();
 
   //recupera el estado actual ser servidor (estado on/of, players, etc)

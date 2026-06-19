@@ -64,3 +64,15 @@ export function timeFormat(sec) {
   const format = `${hours > 0 ? hours + "h " : ""} ${minutes > 0 ? minutes + "m " : ""} ${(sec % 60) + "s"}`;
   return format;
 }
+
+export function preloadImg() {
+  const imgList = [
+    "../assets/sv_day.webp",
+    "../assets/sv_night.webp",
+    "../assets/sv_sunset.webp",
+  ];
+  imgList.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
+}

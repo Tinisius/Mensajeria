@@ -10,7 +10,7 @@ async function app() {
       label.textContent = "TEST: " + i;
       await sleep(1);
     }
-    const startedAud = new Audio("../assets/started.mp3");
+    const startedAud = new Audio("../assets/audio/started.mp3");
     startedAud.play();
 
     button.disabled = false;

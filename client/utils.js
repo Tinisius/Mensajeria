@@ -67,11 +67,13 @@ export function timeFormat(sec) {
 
 export function preloadImg() {
   const imgList = [
-    "../assets/sv_day.webp",
-    "../assets/sv_night.webp",
-    "../assets/sv_sunset.webp",
+    "../assets/backgrounds/sv_day.webp",
+    "../assets/backgrounds/sv_night.webp",
+    "../assets/backgrounds/sv_sunset.webp",
   ];
   imgList.forEach((src) => {
-    fetch(src, { priority: "high" }).catch(() => {});
+    fetch(src, { priority: "high" }).catch(() => {
+      /*ignoramos errores*/
+    });
   });
 }

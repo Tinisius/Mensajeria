@@ -153,8 +153,8 @@ function renderChatsSelectors(chats) {
 
     const passImage = document.createElement("img");
     passImage.src = item.chatPassword
-      ? "../assets/close.ico"
-      : "../assets/open.ico";
+      ? "../assets/icons/close.ico"
+      : "../assets/icons/open.ico";
     passImage.className = "icon";
     chatDiv.appendChild(passImage);
 
@@ -247,7 +247,7 @@ function renderMessage(chat, username, msg, color, font, type = "message") {
 
   const addFriend = document.createElement("img");
   addFriend.className = "icon";
-  addFriend.src = "../assets/addUser.ico";
+  addFriend.src = "../assets/icons/addUser.ico";
 
   const messagesDiv = document.getElementById(`${chat}_messages`);
   messagesDiv.appendChild(messageElem);

@@ -104,7 +104,7 @@ body {
 
 #server-bg {
   background-color: #112760;
-  background: url(assets/sv_night.webp) center center no-repeat;
+  background: url(assets/backgrounds/sv_night.webp) center center no-repeat;
   background-size: cover;
   transition: all 0.3s ease-in-out;
 }
@@ -536,7 +536,7 @@ h1 {
     background: linear-gradient(163deg, #ffffff 0%, #ffa2fc 100%);
     border-color: #852085;
 
-    background-image: url("assets/list.ico");
+    background-image: url("assets/icons/list.ico");
     background-size: cover; /* Resizes the image to cover the entire button area */
   }
 

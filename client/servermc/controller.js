@@ -65,12 +65,13 @@ function changeState(state) {
       $button.textContent = "Prender";
       $button.style.backgroundColor = "green";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_night.webp)";
+      $serverContainer.style.backgroundImage =
+        "url(../assets/backgrounds/sv_night.webp)";
 
       changeColor("warm");
       break;
     case "started":
-      const startedAud = new Audio("../assets/started.mp3");
+      const startedAud = new Audio("../assets/audio/started.mp3");
       startedAud.play();
 
       $stateEl.textContent = "Prendido";
@@ -78,7 +79,8 @@ function changeState(state) {
       $button.textContent = "Apagar";
       $button.style.backgroundColor = "red";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_day.webp)";
+      $serverContainer.style.backgroundImage =
+        "url(../assets/backgrounds/sv_day.webp)";
 
       changeColor("cold");
       break;
@@ -88,7 +90,8 @@ function changeState(state) {
       $button.textContent = "Prendiendo";
       $button.style.backgroundColor = "grey";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.webp)";
+      $serverContainer.style.backgroundImage =
+        "url(../assets/backgrounds/sv_sunset.webp)";
 
       changeColor("cold");
       break;
@@ -98,7 +101,8 @@ function changeState(state) {
       $button.textContent = "Apagando";
       $button.style.backgroundColor = "grey";
 
-      $serverContainer.style.backgroundImage = "url(../assets/sv_sunset.webp)";
+      $serverContainer.style.backgroundImage =
+        "url(../assets/backgrounds/sv_sunset.webp)";
 
       changeColor("warm");
       break;

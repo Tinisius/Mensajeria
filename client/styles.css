@@ -211,7 +211,8 @@ body {
   }
 
   #state_text {
-    font-size: 5vw;
+    font-size: 6vw;
+    margin: auto;
   }
 
   .state_text_fragment {

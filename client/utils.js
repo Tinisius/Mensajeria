@@ -72,7 +72,6 @@ export function preloadImg() {
     "../assets/sv_sunset.webp",
   ];
   imgList.forEach((src) => {
-    const img = new Image();
-    img.src = src;
+    fetch(src, { priority: "high" }).catch(() => {});
   });
 }

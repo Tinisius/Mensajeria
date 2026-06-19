@@ -138,6 +138,7 @@ async function domReady() {
 
 async function init() {
   preloadImg();
+
   await domReady();
 
   //recupera el estado actual ser servidor (estado on/of, players, etc)

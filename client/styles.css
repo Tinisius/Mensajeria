@@ -209,6 +209,10 @@ body {
     width: 90vw;
     order: 2; /* Manda jugadores al final (derecha) */
   }
+
+  #state_text {
+    font-size: 5vw;
+  }
 }
 
 /*-------------------------DE MENSAJERIA-------------------------*/

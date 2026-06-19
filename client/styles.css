@@ -192,6 +192,7 @@ body {
 @media (max-width: 768px) {
   #sv_page_wrapper {
     flex-direction: column;
+    align-items: center;
   }
 
   .sv_text {

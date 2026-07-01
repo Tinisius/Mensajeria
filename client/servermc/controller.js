@@ -141,7 +141,7 @@ async function domReady() {
 }
 
 async function init() {
-  preloadImg();
+  //preloadImg();
 
   await domReady();
 

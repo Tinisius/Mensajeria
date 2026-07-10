@@ -168,6 +168,10 @@ body {
   -ms-overflow-style: none; /* Hides scrollbar in IE and Edge */
 }
 
+.logMsg {
+  background-color: rgb(255 255 255 / 45%);
+}
+
 .iconSelect {
   aspect-ratio: 1/1;
   width: 50px;

@@ -162,6 +162,8 @@ async function init() {
   if (data.ok === false) {
     showAlert("error al obtener infomacion");
   } else {
+    console.log("svdata: " + data.sv_data);
+    console.log("logs: " + data.sv_data.logs);
     renderLogs(data.sv_data.logs);
     changeData(data.sv_data);
     changeState(data.sv_data.state);

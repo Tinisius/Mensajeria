@@ -162,7 +162,6 @@ async function init() {
   if (data.ok === false) {
     showAlert("error al obtener infomacion");
   } else {
-    console.log("svdata: " + (await data.sv_data.json()));
     console.log("logs: " + data.sv_data.players);
     renderLogs(data.sv_data.logs);
     changeData(data.sv_data);
@@ -199,12 +198,12 @@ async function init() {
   const $mainSelect = document.getElementById("mainSelect");
   $mainSelect.addEventListener("click", () => {
     document.getElementById("main_sv_container").style.display = "flex";
-    document.getElementById("log").style.display = "none";
+    document.getElementById("logsContainer").style.display = "none";
   });
   const $logSelect = document.getElementById("logSelect");
   $logSelect.addEventListener("click", () => {
     document.getElementById("main_sv_container").style.display = "none";
-    document.getElementById("log").style.display = "flex";
+    document.getElementById("logsContainer").style.display = "flex";
   });
 }
 

@@ -17,13 +17,13 @@
   </head>
   <body id="server-bg">
     <div id="sv_page_wrapper">
-      <aside id="sv_data">
+      <aside id="sv_data" class="sv_aside">
         <h2>Jugadores:</h2>
         <ul id="player_list">
           <li>Cargando...</li>
         </ul>
       </aside>
-      <main id="main_sv_container">
+      <main id="main_sv_container" class="main">
         <h1 class="color-text warm-text sv_text">
           IP: waffle-job.gl.joinmc.link
         </h1>
@@ -58,6 +58,15 @@
           <button class="stockBtn">Volver</button>
         </a>
       </main>
+      <div id="logsContainer" class="main" style="display: none"></div>
+      <aside id="selector" class="sv_aside">
+        <button id="mainSelect">
+          <img class="iconSelect" src="../assets/icons/mc-server.ico" />
+        </button>
+        <button id="logSelect">
+          <img class="iconSelect" src="../assets/icons/dashboard.ico" />
+        </button>
+      </aside>
     </div>
   </body>
   <script type="module" src="controller.js"></script>

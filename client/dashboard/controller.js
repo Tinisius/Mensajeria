@@ -39,8 +39,6 @@ function displayDisks(data) {
   }
 }
 
-const raspButton = document.getElementById("raspButton");
-
 function updateData(data) {
   const $cpuEl = document.getElementById("cpu-value");
   $cpuEl.textContent = data.cpu + "%";

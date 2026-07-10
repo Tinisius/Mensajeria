@@ -73,6 +73,10 @@ io.on("connection", async (socket) => {
     io.emit("update_sv_data", sv_data);
   });
 
+  socket.on("newLog", (log) => {
+    io.emit("newLog", log);
+  });
+
   //de los usuarios a la raspberry
   socket.on("changeState", (newState) => {
     raspiSocket.emit("changeState", newState);

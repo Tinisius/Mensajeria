@@ -6,6 +6,7 @@ let currentData = {
   players: [],
   startedAt: null,
   timeOut: 0,
+  logs: [],
 };
 
 const socket = io();
@@ -48,6 +49,16 @@ function changeColor(color) {
     } else {
       $element.classList.add("rainbow-text");
     }
+  });
+}
+
+function renderLogs(logs) {
+  const $logsDiv = document.getElementById("logsContainer");
+  logs.forEach((log) => {
+    const $logEl = document.createElement("div");
+    $logEl.textContent = log;
+    $logEl.className = "logMsg";
+    $logsDiv.appendChild($logEl);
   });
 }
 
@@ -113,8 +124,8 @@ function changeState(state) {
   $stateTextEl.style.color = $stateEl.style.color;
 }
 function changeData(data) {
-  const $playersList = document.getElementById("player_list");
   if (data.players) {
+    const $playersList = document.getElementById("player_list");
     $playersList.innerHTML = "";
     data.players.forEach((player) => {
       const $playerEl = document.createElement("li");
@@ -151,6 +162,7 @@ async function init() {
   if (data.ok === false) {
     showAlert("error al obtener infomacion");
   } else {
+    renderLogs(data.sv_data.logs);
     changeData(data.sv_data);
     changeState(data.sv_data.state);
   }
@@ -163,12 +175,34 @@ async function init() {
     changeData(sv_data);
   });
 
+  //añade el nuevo registro
+  socket.on("newLog", (log) => {
+    const $logsDiv = document.getElementById("logsContainer");
+    const $logEl = document.createElement("div");
+    $logEl.textContent = log;
+    $logEl.className = "logMsg";
+    $logsDiv.appendChild($logEl);
+
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+
   const $manageBtn = document.getElementById("manage_sv");
   $manageBtn.addEventListener("click", () => {
     if (currentData.state === "starting" || currentData.state === "stoping")
       return;
     const newState = currentData.state === "off" ? "started" : "off";
     socket.emit("changeState", newState);
+  });
+
+  const $mainSelect = document.getElementById("mainSelect");
+  $mainSelect.addEventListener("click", () => {
+    document.getElementById("main_sv_container").style.display = "flex";
+    document.getElementById("log").style.display = "none";
+  });
+  const $logSelect = document.getElementById("logSelect");
+  $logSelect.addEventListener("click", () => {
+    document.getElementById("main_sv_container").style.display = "none";
+    document.getElementById("log").style.display = "flex";
   });
 }
 

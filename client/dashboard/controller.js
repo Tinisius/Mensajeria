@@ -1,3 +1,7 @@
+const RED = "#ff8181";
+const YELLOW = "#ffe488";
+const WHITE = "#fffae9";
+
 function createTableCell(text, className) {
   const cell = document.createElement("td");
   if (className) cell.className = className;
@@ -42,20 +46,20 @@ function updateData(data) {
   $cpuEl.textContent = data.cpu + "%";
   const $cpuRow = document.getElementById("cpu_row");
   $cpuRow.style.backgroundColor =
-    data.cpu > 90 ? "red" : data.cpu > 70 ? "yellow" : "white";
+    data.cpu > 90 ? RED : data.cpu > 70 ? YELLOW : WHITE;
 
   const $ramEl = document.getElementById("ram-value");
   const ramPorcent = (100 * data.ram.usedRAMGB) / data.ram.totalRAMGB;
   $ramEl.textContent = `${data.ram.usedRAMGB}GB / ${data.ram.totalRAMGB}GB / ${ramPorcent.toFixed(2)}%`;
   const $ramRow = document.getElementById("ram_row");
   $ramRow.style.backgroundColor =
-    ramPorcent > 90 ? "red" : ramPorcent > 70 ? "yellow" : "white";
+    ramPorcent > 90 ? RED : ramPorcent > 70 ? YELLOW : WHITE;
 
   const $tempEl = document.getElementById("temp-value");
   $tempEl.textContent = data.temp ? data.temp + "°c" : "No data";
   const $tempRow = document.getElementById("temp_row");
   $tempRow.style.backgroundColor =
-    data.temp > 80 ? "red" : data.temp > 60 ? "yellow" : "white";
+    data.temp > 80 ? RED : data.temp > 60 ? YELLOW : WHITE;
 
   const $netEl = document.getElementById("net-value");
   $netEl.textContent = `${data.upKBps | 0}KBps / ${data.downKBps | 0}KBps`;

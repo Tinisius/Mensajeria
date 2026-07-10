@@ -162,8 +162,9 @@ async function init() {
   if (data.ok === false) {
     showAlert("error al obtener infomacion");
   } else {
-    console.log("logs: " + data.sv_data.players);
-    renderLogs(data.sv_data.logs);
+    console.log("svdata:");
+    console.log(data.sv_data);
+    //renderLogs(data.sv_data.logs);
     changeData(data.sv_data);
     changeState(data.sv_data.state);
   }

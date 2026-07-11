@@ -207,6 +207,7 @@ async function init() {
   const $logSelect = document.getElementById("logSelect");
   $logSelect.addEventListener("click", () => {
     $logs_container.style.height = `${$sv_container.offsetHeight}px`; //aseguro misma altura para que no se note el cambio
+    $logs_container.style.maxHeight = `${$sv_container.offsetHeight}px`; //para celular
     $logs_container.style.width = `${$sv_container.offsetWidth}px`; //lo mismo
     $sv_container.style.display = "none";
     $logs_container.style.display = "flex";

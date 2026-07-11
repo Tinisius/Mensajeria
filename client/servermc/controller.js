@@ -195,15 +195,21 @@ async function init() {
     socket.emit("changeState", newState);
   });
 
+  const $sv_container = document.getElementById("main_sv_container");
+  const $logs_container = document.getElementById("logsContainer");
+
   const $mainSelect = document.getElementById("mainSelect");
   $mainSelect.addEventListener("click", () => {
-    document.getElementById("main_sv_container").style.display = "flex";
-    document.getElementById("logsContainer").style.display = "none";
+    $sv_container.style.display = "flex";
+    $logs_container.style.display = "none";
   });
+
   const $logSelect = document.getElementById("logSelect");
   $logSelect.addEventListener("click", () => {
-    document.getElementById("main_sv_container").style.display = "none";
-    document.getElementById("logsContainer").style.display = "flex";
+    $logs_container.style.height = `${$sv_container.offsetHeight}px`; //aseguro misma altura para que no se note el cambio
+    $logs_container.style.width = `${$sv_container.offsetWidth}px`; //lo mismo
+    $sv_container.style.display = "none";
+    $logs_container.style.display = "flex";
   });
 }
 

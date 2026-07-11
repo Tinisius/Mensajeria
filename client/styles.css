@@ -175,6 +175,8 @@ body {
 }
 
 .button_selector {
+  display: flex;
+  justify-content: center;
   background-color: transparent;
   padding: 5px;
   border-radius: 25%;

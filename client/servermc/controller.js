@@ -54,6 +54,7 @@ function changeColor(color) {
 
 function renderLogs(logs) {
   const $logsDiv = document.getElementById("logsContainer");
+  $logsDiv.innerHTML = "";
   logs.forEach((log) => {
     const $logEl = document.createElement("div");
     $logEl.textContent = log;

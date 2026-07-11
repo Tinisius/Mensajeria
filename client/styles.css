@@ -170,6 +170,14 @@ body {
 
 .logMsg {
   background-color: rgb(255 255 255 / 45%);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.button_selector {
+  background-color: transparent;
+  padding: 5px;
+  border-radius: 25%;
 }
 
 .iconSelect {
@@ -226,6 +234,16 @@ body {
     align-items: center;
   }
 
+  #data_launcher,
+  #data_version,
+  #data_mods {
+    display: none;
+  }
+
+  #state-container {
+    padding-top: 0;
+  }
+
   .sv_text {
     white-space: nowrap;
     font-size: 5vw;
@@ -233,12 +251,22 @@ body {
 
   #main_sv_container {
     width: 90vw;
-    order: 1; /* Pone el main al principio (izquierda) */
+    order: 1; /* Pone el main al principio (arriba) */
+  }
+  #logsContainer {
+    width: 90vw;
+    order: 1; /* Pone el main al principio (arriba) */
+  }
+
+  #selector {
+    flex-direction: row;
+    width: 90vw;
+    order: 0; /* Pone el selector al medio */
   }
 
   #sv_data {
     width: 90vw;
-    order: 2; /* Manda jugadores al final (derecha) */
+    order: 3; /* Manda jugadores al final (abajo) */
   }
 
   #state_text {

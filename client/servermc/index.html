@@ -24,16 +24,25 @@
         </ul>
       </aside>
       <main id="main_sv_container" class="main">
-        <h1 class="color-text warm-text sv_text">
+        <h1 id="data_ip" class="color-text warm-text sv_text">
           IP: waffle-job.gl.joinmc.link
         </h1>
-        <h1 class="color-text warm-text sv_text" style="font-size: 36px">
+        <h1
+          id="data_launcher"
+          class="color-text warm-text sv_text"
+          style="font-size: 36px"
+        >
           Laucher: Forge
         </h1>
-        <h1 class="color-text warm-text sv_text" style="font-size: 36px">
+        <h1
+          id="data_version"
+          class="color-text warm-text sv_text"
+          style="font-size: 36px"
+        >
           Version: 1.20.1
         </h1>
         <a
+          id="data_mods"
           href="https://drive.google.com/file/d/1e2rcQqfJaF4EhihF2st_uV8QYV1bjN2f/view?usp=sharing"
           style="text-decoration: none"
           target="_blank"
@@ -58,12 +67,14 @@
           <button class="stockBtn">Volver</button>
         </a>
       </main>
-      <div id="logsContainer" class="main" style="display: none"></div>
+      <div id="logsContainer" class="main" style="display: none">
+        <div class="logMsg">ACA VAN LOS ULTIMOS LOGS</div>
+      </div>
       <aside id="selector" class="sv_aside">
-        <button id="mainSelect">
+        <button class="button_selector" id="mainSelect">
           <img class="iconSelect" src="../assets/icons/mc-server.ico" />
         </button>
-        <button id="logSelect">
+        <button class="button_selector" id="logSelect">
           <img class="iconSelect" src="../assets/icons/dashboard.ico" />
         </button>
       </aside>

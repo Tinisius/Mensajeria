@@ -25,14 +25,18 @@ async function startIdleTimeout(time) {
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
 
+  const startTime = new Date.now(); //guardamos el instante (en milis) en cuanto nos llega la que nos llego el timeout para time = time
+
   while (
     currentData.timeOut > 0 &&
     currentData.players.length === 0 &&
     currentData.state === "started"
   ) {
     $timeOut.textContent = "AutoApagado en: " + timeFormat(currentData.timeOut);
-    currentData.timeOut--;
-    await sleep(1);
+
+    const passedTimeMillis = new Date.now() - startTime; //miliseg que pasaron desde el startTime
+    currentData.timeOut = time - Math.trunc(passedTimeMillis / 1000);
+    await sleep(0.1);
   }
   currentData.timeOut = 0;
   $timeOut.remove();

@@ -188,7 +188,7 @@ async function init() {
     $logEl.className = "logMsg";
     $logsDiv.appendChild($logEl);
 
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    $logsDiv.scrollTop = messagesDiv.scrollHeight;
   });
 
   const $manageBtn = document.getElementById("manage_sv");

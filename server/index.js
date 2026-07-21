@@ -18,11 +18,13 @@ import {
 } from "./security/validations.js";
 import { closeMongoConnection } from "./db/mongo.js";
 import { stat } from "fs";
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
+app.use(cors({ origin: "http://localhost:8000" }));
 const PORT = Number(process.env.PORT || 8000);
 const server = http.createServer(app);
 const io = new Server(server);

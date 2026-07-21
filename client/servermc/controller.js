@@ -87,8 +87,12 @@ function changeState(state) {
       changeColor("warm");
       break;
     case "started":
-      const startedAud = new Audio("../assets/audio/started.mp3");
-      startedAud.play();
+      try {
+        const startedAud = new Audio("../assets/audio/started.mp3");
+        startedAud.play();
+      } catch (error) {
+        console.log(error.message);
+      }
 
       $stateEl.textContent = "Prendido";
       $stateEl.style.color = "green";

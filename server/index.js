@@ -24,10 +24,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-app.use(cors({ origin: "http://localhost:8000" }));
+app.use(cors({ origin: "http://localhost:8000" })); //admite las requests desde local (fetch de tipo get, post, etc)
 const PORT = Number(process.env.PORT || 8000);
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    //admite las las conexiones al socket desde local (socket = io("https://tinisius.site");)
+    origin: "http://localhost:8000",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 const lastChat = new Map();
 

@@ -25,7 +25,7 @@ async function startIdleTimeout(time) {
 
   currentData.timeOut = time; //se reescribe pero no importa, es reutilizable
 
-  const startTime = new Date.now(); //guardamos el instante (en milis) en cuanto nos llega la que nos llego el timeout para time = time
+  const startTime = Date.now(); //guardamos el instante (en milis) en cuanto nos llega la que nos llego el timeout para time = time
 
   while (
     currentData.timeOut > 0 &&
@@ -34,7 +34,7 @@ async function startIdleTimeout(time) {
   ) {
     $timeOut.textContent = "AutoApagado en: " + timeFormat(currentData.timeOut);
 
-    const passedTimeMillis = new Date.now() - startTime; //miliseg que pasaron desde el startTime
+    const passedTimeMillis = Date.now() - startTime; //miliseg que pasaron desde el startTime
     currentData.timeOut = time - Math.trunc(passedTimeMillis / 1000);
     await sleep(0.1);
   }
@@ -87,8 +87,12 @@ function changeState(state) {
       changeColor("warm");
       break;
     case "started":
-      const startedAud = new Audio("../assets/audio/started.mp3");
-      startedAud.play();
+      try {
+        const startedAud = new Audio("../assets/audio/started.mp3");
+        startedAud.play();
+      } catch (error) {
+        console.log(error.message);
+      }
 
       $stateEl.textContent = "Prendido";
       $stateEl.style.color = "green";
@@ -167,6 +171,7 @@ async function init() {
   if (data.ok === false) {
     showAlert("error al obtener infomacion");
   } else {
+    console.log(data);
     renderLogs(data.sv_data.logs);
     changeData(data.sv_data);
     changeState(data.sv_data.state);
@@ -188,7 +193,7 @@ async function init() {
     $logEl.className = "logMsg";
     $logsDiv.appendChild($logEl);
 
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    $logsDiv.scrollTop = $logsDiv.scrollHeight;
   });
 
   const $manageBtn = document.getElementById("manage_sv");

@@ -9,7 +9,17 @@ const camera = document.getElementById("camera");
 let previousUrl = null;
 
 socket.on("camera_frame", async (data) => {
-  console.log("FRAME");
+  //debug - - - - - - - - - - - - - - - - - - - - - - - -
+  const bytes = new Uint8Array(data);
+
+  console.log({
+    tipo: data.constructor.name,
+    tamaño: bytes.length,
+    inicio: [...bytes.slice(0, 2)],
+    final: [...bytes.slice(-2)],
+  });
+  //debug - - - - - - - - - - - - - - - - - - - - - - - -
+
   //convertimos los bytes un una imagen
   const blob = new Blob([data], { type: "image/jpeg" }); //bytes como un archivo JPEG.
   const imageUrl = URL.createObjectURL(blob); //URL temporal, ej: blob:http://tinisius.site/abc-123

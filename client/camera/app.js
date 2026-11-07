@@ -5,6 +5,7 @@ socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
 
-socket.on("camera-frame", (image) => {
+socket.on("camera_frame", (image) => {
+  console.log("llego un frame");
   document.getElementById("camera").src = `data:image/jpeg;base64,${image}`;
 });

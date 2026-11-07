@@ -79,7 +79,7 @@ io.on("connection", async (socket) => {
 
   //5.0
   socket.on("camera:frame", (frame) => {
-    io.emit("camera:frame", frame);
+    io.emit("camera_frame", frame);
   });
 
   //de la raspberry a los usuarios

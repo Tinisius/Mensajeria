@@ -68,6 +68,11 @@ io.on("connection", async (socket) => {
     cb("estado de server actualizado");
   });
 
+  //5.0
+  socket.on("camera:frame", (frame) => {
+    io.emit("camera:frame", frame);
+  });
+
   //de la raspberry a los usuarios
   socket.on("update_sv_data", (sv_data) => {
     io.emit("update_sv_data", sv_data);

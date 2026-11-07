@@ -12,6 +12,7 @@ import { saveUser } from "./store/users.js";
 import { getChats, saveChat } from "./store/chats.js";
 import {
   userExists,
+  isAdmin,
   matchPassword,
   chatExists,
   matchChatPassword,
@@ -151,6 +152,14 @@ io.on("connection", async (socket) => {
   socket.on("logIn", async (username, password, callback) => {
     callback(
       (await userExists(username)) && (await matchPassword(username, password)),
+    );
+  });
+
+  socket.on("adminLogIn", async (username, password, callback) => {
+    callback(
+      (await userExists(username)) &&
+        (await isAdmin(username)) &&
+        (await matchPassword(username, password)),
     );
   });
 

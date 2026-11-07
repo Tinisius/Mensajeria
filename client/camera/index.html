@@ -5,11 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Camera</title>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="../styles.css" />
     <link rel="icon" href="../assets/icons/camera.ico" type="image/x-icon" />
   </head>
   <body>
-    <h1>Camara:</h1>
-    <div id="cameraContainer"><img id="camera" /></div>
+    <div id="loginContainer" class="logContainer" style="display: flex">
+      <h2 id="loginTitle">!Bienvenido!</h2>
+      <input
+        type="text"
+        id="loginInput"
+        class="menuInput"
+        placeholder="Escribe tu nombre"
+      />
+      <input
+        type="text"
+        id="passwordInput"
+        class="menuInput"
+        placeholder="Contraseña"
+      />
+      <button id="loginBtn" class="menuBtn">Ingresar</button>
+    </div>
   </body>
   <script type="module" src="app.js"></script>
 </html>

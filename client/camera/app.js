@@ -18,7 +18,7 @@ function enterCamera() {
   $cameraContainer.id = "camera";
 
   $cameraContainer.appendChild($camera);
-  document.appendChild($cameraContainer);
+  document.getElementById("mainCamera").appendChild($cameraContainer);
 
   socket.on("camera_frame", async (data) => {
     //convertimos los bytes un una imagen

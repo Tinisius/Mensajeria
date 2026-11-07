@@ -28,11 +28,3 @@ socket.on("camera:frame", async (data) => {
     URL.revokeObjectURL(imageUrl);
   }
 });
-
-socket.on("camera_frame", async (data) => {
-  const blob = new Blob([data], { type: "image/jpeg" });
-  const imageUrl = URL.createObjectURL(blob);
-
-  camera.src = imageUrl;
-  await new Promise((r) => setTimeout(r, 200));
-});

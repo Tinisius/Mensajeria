@@ -1,4 +1,5 @@
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
+import { showAlert } from "../utils.js";
 
 const socket = io();
 socket.on("connect", () => {

@@ -8,6 +8,7 @@ socket.on("connect", () => {
 const camera = document.getElementById("#camera");
 let previousUrl = null;
 
+/*
 socket.on("camera:frame", async (data) => {
   const blob = new Blob([data], { type: "image/jpeg" });
   const imageUrl = URL.createObjectURL(blob);
@@ -27,4 +28,13 @@ socket.on("camera:frame", async (data) => {
     console.error("Error decodificando imagen:", error);
     URL.revokeObjectURL(imageUrl);
   }
+});
+*/
+
+socket.on("camera_frame", async (data) => {
+  const blob = new Blob([data], { type: "image/jpeg" });
+  const imageUrl = URL.createObjectURL(blob);
+
+  camera.src = imageUrl;
+  await new Promise((r) => setTimeout(r, 200));
 });

@@ -5,9 +5,6 @@ socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
 
-const camera = document.getElementById("camera");
-let previousUrl = null;
-
 function enterCamera() {
   document.getElementById("loginContainer").style.display = "none";
 
@@ -20,6 +17,7 @@ function enterCamera() {
   $cameraContainer.appendChild($camera);
   document.getElementById("mainCamera").appendChild($cameraContainer);
 
+  let previousUrl = null;
   socket.on("camera_frame", async (data) => {
     //convertimos los bytes un una imagen
     const blob = new Blob([data], { type: "image/jpeg" }); //bytes como un archivo JPEG.
@@ -28,10 +26,10 @@ function enterCamera() {
     const oldUrl = previousUrl;
     previousUrl = imageUrl;
 
-    camera.src = imageUrl;
+    $camera.src = imageUrl;
 
     try {
-      await camera.decode(); //devuelve una promesa que se resuelve cuando el navegador termina de decodificar la imagen.
+      await $camera.decode(); //devuelve una promesa que se resuelve cuando el navegador termina de decodificar la imagen.
 
       if (oldUrl) {
         URL.revokeObjectURL(oldUrl); //Esto evita acumular URLs y recursos en memoria.

@@ -6,6 +6,6 @@ socket.on("connect", () => {
 });
 
 socket.on("camera_frame", (image) => {
-  console.log("llego un frame / mensaje: ", image);
+  //console.log("llego un frame / mensaje: ", image);
   document.getElementById("camera").src = `data:image/jpeg;base64,${image}`;
 });

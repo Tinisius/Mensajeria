@@ -1,4 +1,6 @@
 body {
+  display: flex;
+  flex-direction: column;
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
@@ -6,4 +8,10 @@ body {
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+
+#cameraContainer {
+  aspect-ratio: 1/1;
+  width: 50vw;
+  background: linear-gradient(135deg, #dfea66 0%, #764ba2 100%);
 }

@@ -5,7 +5,9 @@ socket.on("connect", () => {
   console.log("Conectado al servidor");
 });
 
-socket.on("camera_frame", (image) => {
-  //console.log("llego un frame / mensaje: ", image);
-  document.getElementById("camera").src = `data:image/jpeg;base64,${image}`;
+socket.on("camera_frame", (data) => {
+  const blob = new Blob([data], { type: "image/jpeg" });
+  const imageUrl = URL.createObjectURL(blob);
+
+  document.getElementById("camera").src = imageUrl;
 });

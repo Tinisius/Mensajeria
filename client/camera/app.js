@@ -9,8 +9,10 @@ const camera = document.getElementById("camera");
 let previousUrl = null;
 
 socket.on("camera:frame", async (data) => {
-  const blob = new Blob([data], { type: "image/jpeg" });
-  const imageUrl = URL.createObjectURL(blob);
+  console.log("FRAME");
+  //convertimos los bytes un una imagen
+  const blob = new Blob([data], { type: "image/jpeg" }); //bytes como un archivo JPEG.
+  const imageUrl = URL.createObjectURL(blob); //URL temporal, ej: blob:http://tinisius.site/abc-123
 
   const oldUrl = previousUrl;
   previousUrl = imageUrl;
@@ -18,11 +20,10 @@ socket.on("camera:frame", async (data) => {
   camera.src = imageUrl;
 
   try {
-    //espera a que cargue la imagen
-    await camera.decode();
+    await camera.decode(); //devuelve una promesa que se resuelve cuando el navegador termina de decodificar la imagen.
 
     if (oldUrl) {
-      URL.revokeObjectURL(oldUrl);
+      URL.revokeObjectURL(oldUrl); //Esto evita acumular URLs y recursos en memoria.
     }
   } catch (error) {
     console.error("Error decodificando imagen:", error);

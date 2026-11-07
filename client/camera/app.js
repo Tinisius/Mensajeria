@@ -8,7 +8,7 @@ socket.on("connect", () => {
 const camera = document.getElementById("camera");
 let previousUrl = null;
 
-socket.on("camera:frame", async (data) => {
+socket.on("camera_frame", async (data) => {
   console.log("FRAME");
   //convertimos los bytes un una imagen
   const blob = new Blob([data], { type: "image/jpeg" }); //bytes como un archivo JPEG.

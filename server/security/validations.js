@@ -10,6 +10,10 @@ export async function userExists(username) {
   return user ? true : false;
 }
 
+export async function isAdmin(username) {
+  return username == "Tinisius";
+}
+
 export async function matchPassword(username, password) {
   const usersCollection = await getUsersCollection();
   if (!usersCollection) {

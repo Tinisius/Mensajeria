@@ -12,6 +12,7 @@ import { saveUser } from "./store/users.js";
 import { getChats, saveChat } from "./store/chats.js";
 import {
   userExists,
+  isAdmin,
   matchPassword,
   chatExists,
   matchChatPassword,
@@ -80,6 +81,9 @@ io.on("connection", async (socket) => {
   //5.0
   socket.on("camera:frame", (frame) => {
     io.emit("camera_frame", frame);
+  });
+  socket.on("keepAliveCamera", () => {
+    io.emit("keepAliveCamera"); //solo el rapsberry tiene el listener
   });
 
   //de la raspberry a los usuarios
@@ -151,6 +155,14 @@ io.on("connection", async (socket) => {
   socket.on("logIn", async (username, password, callback) => {
     callback(
       (await userExists(username)) && (await matchPassword(username, password)),
+    );
+  });
+
+  socket.on("adminLogIn", async (username, password, callback) => {
+    callback(
+      (await userExists(username)) &&
+        (await isAdmin(username)) &&
+        (await matchPassword(username, password)),
     );
   });
 
